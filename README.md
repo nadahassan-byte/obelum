@@ -57,6 +57,12 @@ point the `src` at a real image of the same aspect ratio:
 | `founder.svg` | 4:5 | Founder portrait |
 | `valuation.svg` | 16:9 | CTA backdrop |
 
+`obelum-logo.png` is the real supplied logo lockup (1748x498, transparent PNG)
+and is **not** a placeholder. It is sized by height in CSS so the 3.51:1
+artwork never distorts. `favicon.png` and `apple-touch-icon.png` are the "O"
+mark cropped from it onto anthracite. If a vector version of the logo exists,
+dropping in an SVG would sharpen it on high-density screens.
+
 The hero is already marked `fetchpriority="high"`; everything below the fold is
 `loading="lazy"`.
 
