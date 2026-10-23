@@ -60,6 +60,13 @@ point the `src` at a real image of the same aspect ratio:
 The hero is already marked `fetchpriority="high"`; everything below the fold is
 `loading="lazy"`.
 
+Note on caching: `vercel.json` gives `/assets/*` a 1-hour revalidating cache
+rather than the usual year-long `immutable` one. Filenames here are not
+content-hashed and the placeholders are meant to be overwritten in place, so an
+immutable cache would keep real photography from appearing. If you move to
+hashed filenames, raise it then. (`vercel.json` permits no comments, hence this
+note.)
+
 ## Accessibility & behaviour notes
 
 - Every section is readable and usable with JavaScript disabled; the scripts are
