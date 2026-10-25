@@ -40,62 +40,61 @@
 
 <!-- ============================================================= Header -->
 <header class="site-header site-header--over" data-header>
-  <div class="topbar">
-    <div class="shell topbar__inner">
-      <ul class="topbar__list">
-        <li><a href="tel:+971500000000">+971 50 000 0000</a></li>
-        <li><a href="mailto:nicolas@obelum.ae">nicolas@obelum.ae</a></li>
-      </ul>
-      <ul class="topbar__list">
-        <li><a href="#journal">Market data</a></li>
-        <li><a href="#valuation">List with us</a></li>
-        <li><a href="#" aria-label="Switch language">EN&nbsp;/&nbsp;AR</a></li>
-      </ul>
-    </div>
-  </div>
-
   <div class="shell site-header__inner">
+
+    <div class="header-side header-side--start">
+    <button class="globe" type="button" aria-label="Change language">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M3 12h18M12 3c2.6 2.6 2.6 15 0 18M12 3c-2.6 2.6-2.6 15 0 18"/>
+      </svg>
+    </button>
+
+    <nav class="nav nav--left" aria-label="Primary">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="#">Home</a></li>
+        <li><a class="nav__link" href="#listings">Properties</a></li>
+        <li><a class="nav__link" href="#listings">Rentals</a></li>
+      </ul>
+    </nav>
+    </div>
+
     <a class="wordmark" href="#">
       <img class="wordmark__img" src="assets/img/obelum-logo.png"
            alt="Obelum Properties" width="1748" height="498" fetchpriority="high">
     </a>
 
-    <nav class="nav" aria-label="Primary">
+    <div class="header-side header-side--end">
+    <nav class="nav nav--right" aria-label="Secondary">
       <ul class="nav__list">
-        <li><a class="nav__link" href="#listings">Buy</a></li>
-        <li><a class="nav__link" href="#listings">Rent</a></li>
-        <li><a class="nav__link" href="#areas">Off-plan</a></li>
-        <li><a class="nav__link" href="#tours">Tours</a></li>
-        <li><a class="nav__link" href="#journal">Insights</a></li>
         <li><a class="nav__link" href="#story">About</a></li>
+        <li><a class="nav__link" href="#journal">Guides &amp; insights</a></li>
+        <li><a class="nav__link" href="#valuation">Message us</a></li>
       </ul>
     </nav>
 
-    <div class="header-actions">
-      <a class="btn btn--gold" href="#valuation">Value my property</a>
-      <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu" data-burger>
-        <span></span><span></span><span></span>
-      </button>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu" data-burger>
+      <span></span><span></span><span></span>
+    </button>
     </div>
   </div>
 </header>
 
 <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile" data-mobile-nav>
   <ul class="mobile-nav__list">
-    <li><a href="#listings">Buy</a></li>
-    <li><a href="#listings">Rent</a></li>
+    <li><a href="#listings">Properties</a></li>
+    <li><a href="#listings">Rentals</a></li>
     <li><a href="#areas">Off-plan</a></li>
     <li><a href="#tours">Tours</a></li>
-    <li><a href="#journal">Insights</a></li>
+    <li><a href="#journal">Guides &amp; insights</a></li>
     <li><a href="#story">About</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#valuation">Message us</a></li>
   </ul>
   <div class="mobile-nav__meta">
     <a href="tel:+971500000000">+971 50 000 0000</a>
     <a href="mailto:nicolas@obelum.ae">nicolas@obelum.ae</a>
     <span>Dubai, United Arab Emirates</span>
   </div>
-  <a class="btn btn--gold" href="#valuation">Value my property</a>
 </nav>
 
 <main id="main">
@@ -104,82 +103,23 @@
 <section class="hero">
   <div class="hero__media">
     <!-- Swap for a looping showreel: <video autoplay muted loop playsinline poster="…"> -->
-    <img src="assets/img/hero.svg" alt="" width="1920" height="1080" fetchpriority="high">
+    <img src="assets/img/hero.svg" alt="" width="2400" height="1500" fetchpriority="high">
   </div>
   <div class="hero__scrim" aria-hidden="true"></div>
 
   <div class="shell hero__inner">
-    <div class="hero__copy">
-      <span class="eyebrow">Dubai · Earthy · Measured · Modern</span>
-      <h1 class="display hero__title">The land and <span class="italic">the analysis.</span></h1>
-      <p class="hero__sub">
-        Underneath every property is the ground you are actually paying for.
-        We price that ground, then we show you the working.
-      </p>
-    </div>
+    <h1 class="hero__title">
+      We price the ground, not the view
+      <span>See the working</span>
+    </h1>
 
-    <div class="search" data-search>
-      <div class="search__tabs" role="tablist" aria-label="Search type">
-        <button class="search__tab" role="tab" aria-selected="true"  data-tab="buy">Buy</button>
-        <button class="search__tab" role="tab" aria-selected="false" data-tab="rent">Rent</button>
-        <button class="search__tab" role="tab" aria-selected="false" data-tab="offplan">Off-plan</button>
-        <button class="search__tab" role="tab" aria-selected="false" data-tab="commercial">Commercial</button>
-      </div>
-
-      <form class="search__form" action="#listings" method="get">
-        <div class="field">
-          <label for="s-where">Community</label>
-          <input id="s-where" name="where" type="text" placeholder="JVC, Dubai Marina, Palm Jumeirah…" autocomplete="off">
-        </div>
-        <div class="field">
-          <label for="s-type">Property type</label>
-          <select id="s-type" name="type">
-            <option>Any type</option>
-            <option>Apartment</option>
-            <option>Villa</option>
-            <option>Townhouse</option>
-            <option>Penthouse</option>
-            <option>Plot</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="s-beds">Bedrooms</label>
-          <select id="s-beds" name="beds">
-            <option>Any</option>
-            <option>Studio</option>
-            <option>1+</option>
-            <option>2+</option>
-            <option>3+</option>
-            <option>4+</option>
-            <option>5+</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="s-price" data-price-label>Max price (AED)</label>
-          <select id="s-price" name="price">
-            <option>No maximum</option>
-            <option>1,000,000</option>
-            <option>2,500,000</option>
-            <option>5,000,000</option>
-            <option>10,000,000</option>
-            <option>25,000,000</option>
-          </select>
-        </div>
-        <button class="search__submit" type="submit">
-          Search
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="7" cy="7" r="5.25" stroke="currentColor" stroke-width="1.3"/>
-            <path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.3"/>
-          </svg>
-        </button>
-      </form>
-    </div>
-
-    <div class="hero__foot">
-      <span class="scroll-cue"><i></i> Scroll</span>
-      <span>RERA registered · Dubai Land Department</span>
+    <div class="hero__actions">
+      <a class="hero__btn" href="#listings">All properties</a>
+      <a class="hero__btn" href="#valuation">Sell with us</a>
     </div>
   </div>
+
+  <span class="hero__ref">Ref. OBL-6820</span>
 </section>
 
 <!-- ============================================================== Stats -->
@@ -202,6 +142,51 @@
       </div>
       <p class="lede">Every listing carries the numbers we used to price it — service charge, net yield, and the comparables we rejected.</p>
     </header>
+
+    <!-- Search moved out of the hero so the hero stays a single image; the
+         functionality lives here, directly above the results it filters. -->
+    <div class="search" data-search>
+      <div class="search__tabs" role="tablist" aria-label="Search type">
+        <button class="search__tab" role="tab" aria-selected="true"  data-tab="buy">Buy</button>
+        <button class="search__tab" role="tab" aria-selected="false" data-tab="rent">Rent</button>
+        <button class="search__tab" role="tab" aria-selected="false" data-tab="offplan">Off-plan</button>
+      </div>
+
+      <form class="search__form" action="#listings" method="get">
+        <div class="field">
+          <label for="s-where">Community</label>
+          <input id="s-where" name="where" type="text" placeholder="JVC, Dubai Marina, Palm Jumeirah…" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="s-type">Property type</label>
+          <select id="s-type" name="type">
+            <option>Any type</option><option>Apartment</option><option>Villa</option>
+            <option>Townhouse</option><option>Penthouse</option><option>Plot</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="s-beds">Bedrooms</label>
+          <select id="s-beds" name="beds">
+            <option>Any</option><option>Studio</option><option>1+</option>
+            <option>2+</option><option>3+</option><option>4+</option><option>5+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="s-price" data-price-label>Max price (AED)</label>
+          <select id="s-price" name="price">
+            <option>No maximum</option><option>1,000,000</option><option>2,500,000</option>
+            <option>5,000,000</option><option>10,000,000</option><option>25,000,000</option>
+          </select>
+        </div>
+        <button class="search__submit" type="submit">
+          Search
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5.25" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.3"/>
+          </svg>
+        </button>
+      </form>
+    </div>
 
     <div class="cards cards--3">
 
@@ -506,7 +491,7 @@
 
 <!-- ============================================================== Story -->
 <section class="section is-dark on-dark" id="story">
-  <div class="shell story">
+  <div class="shell story story--solo">
     <div class="story__copy">
       <span class="eyebrow">The story</span>
       <h2 class="h2">The land and <span class="italic">the analysis.</span></h2>
@@ -522,14 +507,6 @@
       <blockquote>A brokerage that does the maths before it makes the pitch.</blockquote>
     </div>
 
-    <div class="meanings reveal" aria-label="What each colour means">
-      <div class="meaning"><span class="swatch" style="background:#2D302F;box-shadow:0 0 0 1px rgba(215,208,199,.4)"></span><span><b>Anthracite</b><code>#2D302F</code><br><span>Precision: the fine print, read.</span></span></div>
-      <div class="meaning"><span class="swatch" style="background:#7A5938"></span><span><b>Raw Umber</b><code>#7A5938</code><br><span>The land itself, the real asset.</span></span></div>
-      <div class="meaning"><span class="swatch" style="background:#D7D0C7"></span><span><b>Timberwolf</b><code>#D7D0C7</code><br><span>Neutral grey light: unbiased.</span></span></div>
-      <div class="meaning"><span class="swatch" style="background:#F7F5F1"></span><span><b>Chalk White</b><code>#F7F5F1</code><br><span>The clean page: clarity, nothing hidden.</span></span></div>
-      <div class="meaning"><span class="swatch" style="background:#B39F74"></span><span><b>Obelum Gold</b><code>#B39F74</code><br><span>The gilded tip of the obelisk, the mark of what's genuine.</span></span></div>
-      <div class="meaning"><span class="swatch" style="background:#8E8B85"></span><span><b>Smoke</b><code>#8E8B85</code><br><span>Measured, analytical.</span></span></div>
-      <div class="meaning"><span class="swatch" style="background:#4A3522"></span><span><b>Deep Umber</b><code>#4A3522</code><br><span>Depth and warmth.</span></span></div>
     </div>
   </div>
 </section>
@@ -702,7 +679,6 @@
         <li><a href="#listings">Buy in Dubai</a></li>
         <li><a href="#listings">Rent in Dubai</a></li>
         <li><a href="#areas">Off-plan</a></li>
-        <li><a href="#listings">Commercial</a></li>
         <li><a href="#listings">Off-market list</a></li>
       </ul>
     </div>

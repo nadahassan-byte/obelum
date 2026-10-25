@@ -55,7 +55,6 @@
       buy: 'Max price (AED)',
       rent: 'Max rent (AED / yr)',
       offplan: 'Max price (AED)',
-      commercial: 'Max price (AED)',
     };
     tabs.forEach((tab) => {
       tab.addEventListener('click', () => {
