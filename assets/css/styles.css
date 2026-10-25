@@ -658,6 +658,148 @@ body.nav-open { overflow: hidden; }
 }
 
 /* ==========================================================================
+   Listings — category tabs over full-bleed tiles
+   ========================================================================== */
+.listings { padding-bottom: clamp(3rem, 6vw, 4.5rem); }
+
+/* The search panel sits on the dark ground here. */
+.listings .search {
+  background: rgba(247, 245, 241, 0.055);
+  border: 1px solid var(--rule-light);
+}
+.listings .search__tabs { border-bottom-color: var(--rule-light); }
+.listings .search__tab { color: var(--muted-light); }
+.listings .search__tab:hover { color: var(--chalk-white); }
+.listings .search__tab[aria-selected="true"] { color: var(--gold); }
+.listings .search__tab::after { background: var(--gold); }
+.listings .field { border-color: var(--rule-light) !important; }
+.listings .field label { color: var(--smoke); }
+.listings .field input, .listings .field select { color: var(--chalk-white); }
+.listings .field input::placeholder { color: rgba(215, 208, 199, 0.5); }
+.listings .field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%23B39F74' stroke-width='1.3'/%3E%3C/svg%3E");
+}
+.listings .field select option { color: var(--ink); }
+.listings .search__submit { background: var(--gold); color: var(--ink-deep); }
+.listings .search__submit:hover { background: #C4B189; }
+
+/* ---- Category tabs ---- */
+.cats {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(1.1rem, 2.6vw, 2.6rem);
+  padding: clamp(2.25rem, 4.5vw, 3.5rem) 0 clamp(1.5rem, 3vw, 2.25rem);
+}
+.cats__tab {
+  position: relative;
+  font: 400 clamp(0.7rem, 0.66rem + 0.15vw, 0.8125rem)/1 var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(215, 208, 199, 0.52);
+  padding-block: 0.5rem;
+  white-space: nowrap;
+  transition: color 280ms var(--ease);
+}
+.cats__tab::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 1px; background: currentColor;
+  transform: scaleX(0); transition: transform 320ms var(--ease);
+}
+.cats__tab:hover { color: var(--chalk-white); }
+.cats__tab[aria-selected="true"] { color: var(--chalk-white); }
+.cats__tab[aria-selected="true"]::after { transform: scaleX(1); }
+
+/* ---- Tiles ---- */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.4rem, 0.8vw, 0.7rem);
+  padding-inline: clamp(0.4rem, 0.8vw, 0.7rem);
+}
+@media (min-width: 60rem) { .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.tile {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--ink-deep);
+  color: var(--chalk-white);
+}
+.tile[hidden] { display: none; }
+.tile img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 1100ms var(--ease);
+}
+.tile::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(18,15,12,.92) 0%, rgba(18,15,12,.45) 26%, rgba(18,15,12,0) 58%);
+  transition: background 420ms var(--ease);
+}
+.tile:hover img { transform: scale(1.06); }
+.tile:hover::after {
+  background: linear-gradient(to top, rgba(74,53,34,.94) 0%, rgba(45,48,47,.5) 34%, rgba(45,48,47,0) 66%);
+}
+
+.tile__body {
+  position: relative; z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: center;
+  padding: clamp(1.1rem, 2.4vw, 1.9rem) clamp(0.75rem, 1.6vw, 1.25rem);
+}
+.tile__place {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.15rem, 0.95rem + 0.85vw, 1.75rem);
+  line-height: 1.15;
+}
+.tile__spec {
+  font: 400 clamp(0.625rem, 0.6rem + 0.15vw, 0.75rem)/1.3 var(--sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(247, 245, 241, 0.86);
+}
+.tile__price {
+  font: 400 clamp(0.75rem, 0.72rem + 0.2vw, 0.9375rem)/1 var(--sans);
+  letter-spacing: 0.06em;
+  color: var(--chalk-white);
+}
+
+/* Shown when a category has nothing in it. */
+.tiles__empty {
+  grid-column: 1 / -1;
+  padding: clamp(3rem, 7vw, 5rem) 1rem;
+  text-align: center;
+  color: var(--muted-light);
+  font-family: var(--serif);
+  font-size: 1.25rem;
+}
+
+/* ---- Outlined pill ---- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 1rem clamp(2rem, 4vw, 3rem);
+  border: 1px solid rgba(215, 208, 199, 0.55);
+  border-radius: 999px;
+  color: var(--chalk-white);
+  font: 400 0.8125rem/1 var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background 320ms var(--ease), color 320ms var(--ease), border-color 320ms var(--ease);
+}
+.pill:hover { background: var(--chalk-white); border-color: var(--chalk-white); color: var(--ink-deep); }
+
+/* ==========================================================================
    Signature listing — full-bleed split
    ========================================================================== */
 .signature { display: grid; grid-template-columns: 1fr; }

@@ -133,6 +133,38 @@
     stats.forEach((el) => statIO.observe(el));
   }
 
+  /* --- Listing category filter --------------------------------------------- */
+  const catTabs = $$('.cats__tab');
+  const tileWrap = $('[data-tiles]');
+  if (catTabs.length && tileWrap) {
+    const tiles = $$('.tile', tileWrap);
+    const empty = document.createElement('p');
+    empty.className = 'tiles__empty';
+    empty.hidden = true;
+    empty.textContent = 'Nothing in this category right now.';
+    tileWrap.appendChild(empty);
+
+    const show = (cat) => {
+      let shown = 0;
+      tiles.forEach((t) => {
+        const match = (t.dataset.cats || '').split(/\s+/).includes(cat);
+        t.hidden = !match;
+        if (match) shown++;
+      });
+      empty.hidden = shown > 0;
+    };
+
+    catTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        catTabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+        show(tab.dataset.cat);
+      });
+    });
+
+    const initial = catTabs.find((t) => t.getAttribute('aria-selected') === 'true') || catTabs[0];
+    show(initial.dataset.cat);
+  }
+
   /* --- Tour selector ----------------------------------------------------- */
   const tours = $$('[data-tour]');
   if (tours.length) {

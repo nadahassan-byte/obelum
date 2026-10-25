@@ -49,7 +49,7 @@ point the `src` at a real image of the same aspect ratio:
 | File | Ratio | Used for |
 |------|-------|----------|
 | `hero.webp` | 16:9 | Hero backdrop (real photography, supplied) — swap for a `<video>` showreel if preferred |
-| `listing-0*.svg` | 4:3 | Listing cards |
+| `tile-0*.svg` | 3:4 | Listing tiles (portrait, text overlaid on the lower third) |
 | `signature.svg` | 4:3 | Signature listing |
 | `tour-0*.svg` | 16:9 | Tour stage and list thumbnails |
 | `area-0*.svg` | 3:4 | Community tiles |
