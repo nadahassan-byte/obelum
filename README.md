@@ -48,7 +48,7 @@ point the `src` at a real image of the same aspect ratio:
 
 | File | Ratio | Used for |
 |------|-------|----------|
-| `hero.svg` | 16:9 | Hero backdrop — swap for a `<video>` showreel if preferred |
+| `hero.webp` | 16:9 | Hero backdrop (real photography, supplied) — swap for a `<video>` showreel if preferred |
 | `listing-0*.svg` | 4:3 | Listing cards |
 | `signature.svg` | 4:3 | Signature listing |
 | `tour-0*.svg` | 16:9 | Tour stage and list thumbnails |
