@@ -7,18 +7,38 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* --- Sticky header ---------------------------------------------------- */
+  /* --- Sticky header + hero nav ------------------------------------------ */
   const header = $('[data-header]');
+  const heroNav = $('.hero-nav');
   if (header) {
-    const threshold = () => Math.max(window.innerHeight * 0.55, 240);
+    const threshold = () => Math.max(window.innerHeight * 0.72, 260);
     const onScroll = () => {
       const stuck = window.scrollY > threshold();
       header.classList.toggle('is-stuck', stuck);
-      header.classList.toggle('site-header--over', !stuck);
+      // The nav only exists at the foot of the hero, so it rides up into the
+      // condensed bar rather than scrolling out of reach.
+      if (heroNav) heroNav.classList.toggle('is-stuck', stuck);
     };
     addEventListener('scroll', onScroll, { passive: true });
     addEventListener('resize', onScroll);
     onScroll();
+  }
+
+  /* --- Hero motion toggle -------------------------------------------------- */
+  const mediaToggle = $('[data-media-toggle]');
+  const hero = $('.hero');
+  if (mediaToggle && hero) {
+    const video = $('[data-hero-video]', hero);
+    // Reflect the real starting state: reduced-motion users begin paused.
+    let paused = reduced;
+    const apply = () => {
+      hero.classList.toggle('is-paused', paused);
+      mediaToggle.setAttribute('aria-pressed', String(paused));
+      mediaToggle.setAttribute('aria-label', paused ? 'Play background motion' : 'Pause background motion');
+      if (video) paused ? video.pause() : video.play().catch(() => {});
+    };
+    apply();
+    mediaToggle.addEventListener('click', () => { paused = !paused; apply(); });
   }
 
   /* --- Mobile navigation ------------------------------------------------ */
