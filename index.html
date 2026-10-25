@@ -11,7 +11,7 @@
 <meta property="og:site_name" content="Obelum Properties">
 <meta property="og:title" content="Obelum Properties — Dubai Real Estate, Measured">
 <meta property="og:description" content="The land and the analysis. A Dubai brokerage that does the maths before it makes the pitch.">
-<meta property="og:image" content="assets/img/hero.webp">
+<meta property="og:image" content="assets/img/hero-1.webp">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="assets/img/favicon.png" type="image/png" sizes="256x256">
@@ -86,9 +86,12 @@
 <!-- =============================================================== Hero -->
 <section class="hero">
   <div class="hero__media">
-    <!-- Swap for a looping showreel: <video data-hero-video autoplay muted loop
-         playsinline poster="assets/img/hero.webp"> — the toggle above drives it. -->
-    <img src="assets/img/hero.webp" alt="" width="1672" height="941" fetchpriority="high" data-hero-media>
+    <!-- Slides crossfade in order. Add another by dropping in an <img class="hero__slide">;
+         the script picks up however many are here. -->
+    <img class="hero__slide is-active" src="assets/img/hero-1.webp" alt=""
+         width="1672" height="941" fetchpriority="high">
+    <img class="hero__slide" src="assets/img/hero-2.webp" alt=""
+         width="1672" height="941" loading="lazy" decoding="async">
   </div>
   <div class="hero__scrim" aria-hidden="true"></div>
 

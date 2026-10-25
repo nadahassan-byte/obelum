@@ -24,21 +24,52 @@
     onScroll();
   }
 
-  /* --- Hero motion toggle -------------------------------------------------- */
+  /* --- Hero slideshow + motion toggle ------------------------------------- */
   const mediaToggle = $('[data-media-toggle]');
   const hero = $('.hero');
-  if (mediaToggle && hero) {
+  if (hero) {
+    const slides = $$('.hero__slide', hero);
     const video = $('[data-hero-video]', hero);
-    // Reflect the real starting state: reduced-motion users begin paused.
+    const HOLD = 6500;                   // time each slide is held before the fade
+    let index = Math.max(0, slides.findIndex((s) => s.classList.contains('is-active')));
+    let timer = null;
+    // Reduced-motion visitors start paused on the first frame.
     let paused = reduced;
+
+    const advance = () => {
+      if (slides.length < 2) return;
+      slides[index].classList.remove('is-active');
+      index = (index + 1) % slides.length;
+      const next = slides[index];
+      // Restart the drift so each slide pushes in from its own starting scale.
+      next.style.animation = 'none';
+      void next.offsetWidth;
+      next.style.animation = '';
+      next.classList.add('is-active');
+    };
+
+    const stop = () => { clearInterval(timer); timer = null; };
+    const start_ = () => {
+      stop();
+      if (!paused && slides.length > 1 && !document.hidden) timer = setInterval(advance, HOLD);
+    };
+
     const apply = () => {
       hero.classList.toggle('is-paused', paused);
-      mediaToggle.setAttribute('aria-pressed', String(paused));
-      mediaToggle.setAttribute('aria-label', paused ? 'Play background motion' : 'Pause background motion');
+      if (mediaToggle) {
+        mediaToggle.setAttribute('aria-pressed', String(paused));
+        mediaToggle.setAttribute('aria-label', paused ? 'Play background motion' : 'Pause background motion');
+      }
       if (video) paused ? video.pause() : video.play().catch(() => {});
+      start_();
     };
+
     apply();
-    mediaToggle.addEventListener('click', () => { paused = !paused; apply(); });
+    if (mediaToggle) {
+      mediaToggle.addEventListener('click', () => { paused = !paused; apply(); });
+    }
+    // Don't burn cycles fading images nobody is looking at.
+    document.addEventListener('visibilitychange', () => { document.hidden ? stop() : start_(); });
   }
 
   /* --- Mobile navigation ------------------------------------------------ */
