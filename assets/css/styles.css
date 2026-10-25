@@ -657,89 +657,6 @@ body.nav-open { overflow: hidden; }
 .pill:hover { background: var(--chalk-white); border-color: var(--chalk-white); color: var(--ink-deep); }
 
 /* ==========================================================================
-   Tours (video-led section)
-   ========================================================================== */
-.tours__layout { display: grid; gap: clamp(2rem, 4vw, 3.5rem); }
-@media (min-width: 68rem) { .tours__layout { grid-template-columns: 1.6fr 1fr; align-items: start; } }
-
-.tour-stage { position: relative; overflow: hidden; background: var(--ink-deep); aspect-ratio: 16 / 9; }
-.tour-stage img { width: 100%; height: 100%; object-fit: cover; opacity: .82; transition: transform 1000ms var(--ease), opacity 400ms var(--ease); }
-.tour-stage:hover img { transform: scale(1.04); opacity: .66; }
-.tour-stage__overlay {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; justify-content: space-between;
-  padding: clamp(1.25rem, 3vw, 2.25rem);
-  background: linear-gradient(to top, rgba(28,30,29,.86), rgba(28,30,29,.06) 62%);
-}
-.play {
-  width: clamp(3.75rem, 8vw, 5.25rem);
-  aspect-ratio: 1;
-  border: 1px solid rgba(215,208,199,.5);
-  border-radius: 50%;
-  display: grid; place-items: center;
-  align-self: center; margin-block: auto;
-  color: var(--chalk-white);
-  background: rgba(28,30,29,.3);
-  backdrop-filter: blur(4px);
-  transition: background 320ms var(--ease), border-color 320ms var(--ease), transform 320ms var(--ease);
-}
-.tour-stage:hover .play, .play:hover { background: var(--gold); border-color: var(--gold); color: var(--ink-deep); transform: scale(1.06); }
-.tour-stage__meta { display: grid; gap: 0.5rem; }
-.tour-stage__meta .eyebrow { color: var(--gold); }
-.tour-stage__meta h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.3rem, 1.1rem + 0.9vw, 1.85rem); color: var(--chalk-white); }
-.tour-stage__meta p { font: 400 0.6875rem/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-light); }
-
-.tour-list { display: grid; gap: 1px; background: var(--rule-light); border-block: 1px solid var(--rule-light); }
-.tour-item {
-  display: grid;
-  grid-template-columns: 5.5rem 1fr;
-  gap: 1.125rem;
-  align-items: center;
-  width: 100%;
-  text-align: left;
-  background: var(--ink);
-  padding: 1.125rem;
-  transition: background 300ms var(--ease);
-}
-.tour-item:hover, .tour-item[aria-current="true"] { background: #363A38; }
-.tour-item img { aspect-ratio: 16/10; object-fit: cover; width: 100%; }
-.tour-item__t { font-family: var(--serif); font-size: 1.0625rem; color: var(--chalk-white); line-height: 1.3; }
-.tour-item__m { margin-top: 0.4rem; font: 400 0.625rem/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--smoke); }
-
-/* ==========================================================================
-   Areas
-   ========================================================================== */
-.areas {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-@media (min-width: 64rem) { .areas { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(1rem, 1.6vw, 1.5rem); } }
-.area {
-  position: relative;
-  display: flex; align-items: flex-end;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-  background: var(--anthracite);
-  color: var(--chalk-white);
-}
-.area img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%; object-fit: cover;
-  transition: transform 1000ms var(--ease);
-}
-.area::after {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(28,30,29,.9), rgba(28,30,29,.12) 60%);
-  transition: background 420ms var(--ease);
-}
-.area:hover img { transform: scale(1.07); }
-.area:hover::after { background: linear-gradient(to top, rgba(122,89,56,.92), rgba(28,30,29,.2) 66%); }
-.area__body { position: relative; z-index: 1; padding: clamp(1.1rem, 2.4vw, 1.75rem); display: grid; gap: 0.35rem; }
-.area__name { font-family: var(--serif); font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem); line-height: 1.2; }
-.area__count { font: 400 0.625rem/1 var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: rgba(247,245,241,.74); }
-
-/* ==========================================================================
    Services
    ========================================================================== */
 .services { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
@@ -757,79 +674,6 @@ body.nav-open { overflow: hidden; }
 .service h3 { font-family: var(--serif); font-weight: 400; font-size: 1.45rem; line-height: 1.2; }
 .service p { color: var(--muted); font-size: 0.9375rem; }
 .service .link { margin-top: 0.5rem; justify-self: start; }
-
-/* ==========================================================================
-   Story + palette
-   ========================================================================== */
-.story { display: grid; gap: clamp(2.5rem, 5vw, 4.5rem); align-items: center; }
-@media (min-width: 64rem) { .story { grid-template-columns: 1fr 1fr; } }
-/* Single column once the palette panel is gone, so the section reads as
-   composed rather than half empty. */
-.story--solo { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
-@media (min-width: 64rem) { .story--solo { grid-template-columns: minmax(0, 1fr); } }
-.story--solo .story__copy { max-width: 58rem; justify-items: center; }
-.story--solo .story__copy p { max-width: 62ch; }
-.story--solo blockquote { border-left: 0; border-top: 1px solid var(--gold); padding: 1.5rem 0 0; margin-top: 0.5rem; }
-.story__copy { display: grid; gap: 1.5rem; }
-.story__copy p { color: var(--muted-light); max-width: 52ch; }
-.story blockquote {
-  margin: 0;
-  padding-left: clamp(1.25rem, 2.4vw, 2rem);
-  border-left: 1px solid var(--gold);
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 300;
-  font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem);
-  line-height: 1.4;
-  color: var(--timberwolf);
-}
-
-.meanings { display: grid; gap: 0; }
-.meaning {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1rem;
-  align-items: baseline;
-  padding-block: clamp(0.875rem, 1.6vw, 1.125rem);
-  border-bottom: 1px solid var(--rule-light);
-}
-.meaning:first-child { border-top: 1px solid var(--rule-light); }
-.swatch { width: 1.125rem; height: 1.125rem; border-radius: 50%; transform: translateY(0.2rem); }
-.meaning b { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; color: var(--chalk-white); }
-.meaning span { color: var(--muted-light); font-size: 0.9375rem; }
-.meaning code {
-  font: 400 0.625rem/1 var(--mono);
-  letter-spacing: 0.1em;
-  color: var(--smoke);
-  margin-left: 0.5rem;
-}
-
-/* ==========================================================================
-   Founder
-   ========================================================================== */
-.founder { display: grid; gap: clamp(2.25rem, 5vw, 4.5rem); align-items: center; }
-@media (min-width: 64rem) { .founder { grid-template-columns: 0.85fr 1.15fr; } }
-.founder__media { position: relative; }
-.founder__media img { width: 100%; aspect-ratio: 4/5; object-fit: cover; }
-.founder__media::after {
-  content: ""; position: absolute;
-  inset: auto -0.875rem -0.875rem auto;
-  width: 60%; height: 55%;
-  border: 1px solid var(--gold);
-  z-index: -1;
-}
-.founder__copy { display: grid; gap: 1.5rem; }
-.founder__quote {
-  font-family: var(--serif); font-weight: 300;
-  font-size: clamp(1.45rem, 1.1rem + 1.5vw, 2.35rem);
-  line-height: 1.3;
-}
-.founder__quote .italic { color: var(--raw-umber); }
-.sig { display: grid; gap: 0.3rem; padding-top: 0.5rem; }
-.sig b { font-family: var(--serif); font-weight: 400; font-size: 1.25rem; }
-.sig span { font: 400 0.6875rem/1 var(--mono); letter-spacing: 0.24em; text-transform: uppercase; color: var(--smoke); }
-.contact-lines { display: grid; gap: 0.4rem; font: 400 0.8125rem/1.8 var(--mono); letter-spacing: 0.06em; color: var(--muted); }
-.contact-lines a:hover { color: var(--raw-umber); }
 
 /* ==========================================================================
    Testimonials
@@ -896,6 +740,95 @@ body.nav-open { overflow: hidden; }
 @media (min-width: 30rem) { .valuation__row { grid-template-columns: 1fr 1fr; } }
 .valuation .btn { justify-content: center; width: 100%; }
 .valuation__note { font: 400 0.625rem/1.7 var(--mono); letter-spacing: 0.1em; color: rgba(247,245,241,.55); }
+
+/* ==========================================================================
+   Instagram feed
+   ========================================================================== */
+.feed { padding-block: clamp(3.5rem, 7vw, 6rem); overflow: hidden; }
+
+.feed__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+/* The heading optically centres; the arrows sit out at the edge. */
+@media (min-width: 60rem) {
+  .feed__head { display: grid; grid-template-columns: 1fr auto 1fr; }
+  .feed__title { grid-column: 2; }
+  .feed__nav   { grid-column: 3; justify-self: end; }
+}
+
+.feed__title {
+  font-family: var(--sans);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-size: clamp(1.05rem, 0.78rem + 1.2vw, 2rem);
+  line-height: 1.25;
+  color: var(--chalk-white);
+  text-align: center;
+  margin: 0;
+}
+.feed__handle {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  border-bottom: 1px solid rgba(247, 245, 241, 0.55);
+  padding-bottom: 0.12em;
+  transition: color 280ms var(--ease), border-color 280ms var(--ease);
+  white-space: nowrap;
+}
+.feed__handle:hover { color: var(--gold); border-color: var(--gold); }
+
+.feed__nav { display: flex; gap: 0.625rem; flex: none; }
+.feed__arrow {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border: 1px solid rgba(247, 245, 241, 0.3);
+  border-radius: 50%;
+  color: var(--chalk-white);
+  transition: background 280ms var(--ease), color 280ms var(--ease),
+              border-color 280ms var(--ease), opacity 280ms var(--ease);
+}
+.feed__arrow:hover { background: var(--chalk-white); border-color: var(--chalk-white); color: var(--ink-deep); }
+.feed__arrow[disabled] { opacity: 0.3; pointer-events: none; }
+
+/* Scroll-snap carousel: works by drag and keyboard with the script off. */
+.feed__track {
+  display: grid;
+  grid-auto-flow: column;
+  /* A definite width, not minmax(0, …): with a 0 minimum the six tracks just
+     shrink to fit and the carousel never overflows, so it cannot scroll. */
+  grid-auto-columns: 72%;
+  gap: clamp(0.4rem, 0.8vw, 0.7rem);
+  padding-inline: var(--gutter);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.feed__track::-webkit-scrollbar { display: none; }
+@media (min-width: 46rem) { .feed__track { grid-auto-columns: 44%; } }
+@media (min-width: 72rem) { .feed__track { grid-auto-columns: 31.8%; } }
+
+.feed__item {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--ink-deep);
+  scroll-snap-align: start;
+}
+.feed__item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 900ms var(--ease), opacity 400ms var(--ease);
+}
+.feed__item:hover img { transform: scale(1.05); opacity: 0.86; }
 
 /* ==========================================================================
    Footer

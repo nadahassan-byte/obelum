@@ -143,25 +143,6 @@
     show(initial.dataset.cat);
   }
 
-  /* --- Tour selector ----------------------------------------------------- */
-  const tours = $$('[data-tour]');
-  if (tours.length) {
-    const img     = $('[data-stage-img]');
-    const title   = $('[data-stage-title]');
-    const meta    = $('[data-stage-meta]');
-    const eyebrow = $('[data-stage-eyebrow]');
-
-    tours.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        tours.forEach((b) => b.setAttribute('aria-current', String(b === btn)));
-        if (img)     img.src = btn.dataset.img;
-        if (title)   title.textContent = btn.dataset.title;
-        if (meta)    meta.textContent = btn.dataset.meta;
-        if (eyebrow) eyebrow.textContent = 'Now showing';
-      });
-    });
-  }
-
   /* --- Testimonials ------------------------------------------------------ */
   const quotesRoot = $('[data-quotes]');
   if (quotesRoot) {
@@ -198,6 +179,37 @@
       document.hidden ? clearInterval(timer) : restart();
     });
     restart();
+  }
+
+  /* --- Instagram feed carousel --------------------------------------------- */
+  const feedTrack = $('[data-feed-track]');
+  if (feedTrack) {
+    const arrows = $$('[data-feed]');
+    const step = () => {
+      const first = feedTrack.firstElementChild;
+      if (!first) return feedTrack.clientWidth;
+      const gap = parseFloat(getComputedStyle(feedTrack).columnGap) || 0;
+      return first.getBoundingClientRect().width + gap;
+    };
+
+    // Grey the arrows out at each end rather than letting them do nothing.
+    const sync = () => {
+      const max = feedTrack.scrollWidth - feedTrack.clientWidth;
+      const x = feedTrack.scrollLeft;
+      arrows.forEach((a) => {
+        const atEnd = a.dataset.feed === 'next' ? x >= max - 2 : x <= 2;
+        a.toggleAttribute('disabled', atEnd);
+      });
+    };
+
+    arrows.forEach((a) => a.addEventListener('click', () => {
+      feedTrack.scrollBy({ left: a.dataset.feed === 'next' ? step() : -step(),
+                           behavior: reduced ? 'auto' : 'smooth' });
+    }));
+    feedTrack.addEventListener('scroll', sync, { passive: true });
+    addEventListener('resize', sync);
+    addEventListener('load', sync);
+    sync();
   }
 
   /* --- Service worker ------------------------------------------------------ */

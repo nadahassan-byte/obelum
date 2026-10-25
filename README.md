@@ -73,6 +73,27 @@ immutable cache would keep real photography from appearing. If you move to
 hashed filenames, raise it then. (`vercel.json` permits no comments, hence this
 note.)
 
+## Instagram feed
+
+The section above the footer is **layout and carousel only — it does not pull
+live posts.** The six squares are placeholders. Swapping them by hand works,
+but goes stale; connecting a real source needs one of:
+
+1. **Instagram Graph API.** Requires a Business or Creator account linked to a
+   Facebook Page, a Meta app, and a long-lived access token. Tokens expire
+   every 60 days, so this needs a scheduled refresh — a Vercel cron function
+   fetching `/me/media` and caching the result is the usual shape.
+2. **A hosted embed service** (Behold, EmbedSocial, LightWidget and similar).
+   They handle the token lifecycle; you drop in a script tag. Quicker to set
+   up, costs a subscription, and adds a third-party script to the page.
+
+Either way the markup to fill is `.feed__track` — one `<a class="feed__item">`
+per post, each wrapping a square image. The carousel, arrows and scroll-snap
+work off whatever children are there, so nothing else needs changing.
+
+The heading links to `instagram.com/obelum.properties`; correct that handle if
+it differs.
+
 ## Installable app (PWA)
 
 The site installs to a phone home screen and runs standalone.
