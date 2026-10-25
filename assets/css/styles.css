@@ -1022,3 +1022,71 @@ body.nav-open { overflow: hidden; }
   .site-header, .topbar, .mobile-nav, .search, .scroll-cue { display: none !important; }
   body { background: #fff; color: #000; }
 }
+
+/* ==========================================================================
+   Installed-app and touch refinements
+   ========================================================================== */
+
+/* Respect the notch / home indicator when running standalone or on a
+   notched device. viewport-fit=cover is set on the viewport meta. */
+.site-header { padding-top: env(safe-area-inset-top, 0px); }
+.hero { padding-top: calc(clamp(6rem, 12vh, 9rem) + env(safe-area-inset-top, 0px)); }
+.hero-nav { padding-bottom: calc(clamp(1.1rem, 2.4vh, 1.9rem) + env(safe-area-inset-bottom, 0px)); }
+.mobile-nav {
+  padding-top: calc(7rem + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
+  overscroll-behavior: contain;            /* no scroll chaining to the page behind */
+  -webkit-overflow-scrolling: touch;
+}
+.site-footer__bar { padding-bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px)); }
+@supports (padding: env(safe-area-inset-left)) {
+  .shell, .site-header, .hero, .hero-nav {
+    padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  }
+}
+
+/* No grey flash on tap, and no iOS zoom-on-focus (which needs >=16px type). */
+a, button, input, select, textarea, label {
+  -webkit-tap-highlight-color: transparent;
+}
+@media (max-width: 64rem) {
+  .field input, .field select { font-size: 1rem; }
+}
+
+/* ---- Touch targets ----------------------------------------------------
+   Coarse pointers need roughly 44px of reachable height. These add hit area
+   without changing how anything looks. */
+@media (pointer: coarse) {
+  .wordmark { min-height: 44px; }
+  .hero__cta { min-height: 48px; }
+  .hero-nav__link, .nav__link { padding-block: 0.85rem; }
+  .field { padding-block: 0.9rem; }
+  .field input, .field select { min-height: 44px; }
+  .search__tab { min-height: 48px; }
+  .search__submit { min-height: 52px; }
+  /* min-height beats padding arithmetic here: these sit in flows with their
+     own line-heights, so padding alone kept landing short of 44px. */
+  .link,
+  .fcol a,
+  .site-footer__bar a,
+  .contact-lines a,
+  .mobile-nav__meta a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .link { padding-bottom: 0; }
+  .socials a { width: 44px; height: 44px; }
+  .skip-link { min-height: 44px; display: inline-flex; align-items: center; }
+  .btn { min-height: 48px; }
+  .hero__btn { min-height: 48px; }
+
+  /* The rule stays 2px tall; the padding is the tappable part. */
+  .quotes__dots button {
+    height: 44px;
+    padding-block: 21px;
+    background-clip: content-box;
+  }
+  .quotes__dots { gap: 0.25rem; }
+}

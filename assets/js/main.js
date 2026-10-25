@@ -190,6 +190,14 @@
     restart();
   }
 
+  /* --- Service worker ------------------------------------------------------ */
+  // Only over http(s); registering from file:// throws.
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+
   /* --- Footer year -------------------------------------------------------- */
   const year = $('[data-year]');
   if (year) year.textContent = String(new Date().getFullYear());

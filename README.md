@@ -73,6 +73,24 @@ immutable cache would keep real photography from appearing. If you move to
 hashed filenames, raise it then. (`vercel.json` permits no comments, hence this
 note.)
 
+## Installable app (PWA)
+
+The site installs to a phone home screen and runs standalone.
+
+- `manifest.webmanifest` — standalone display, portrait, brand theme colours,
+  and shortcuts straight to the listings and the valuation form
+- `assets/img/icon-*.png` — 192 and 512 icons, plus maskable variants carrying
+  the extra safe-zone padding Android crops to. All generated from the logo mark.
+- `sw.js` — offline shell. The document is network-first, so a new deploy shows
+  up immediately; same-origin assets are stale-while-revalidate. Bump `CACHE`
+  in that file to invalidate everything.
+- Safe-area insets are honoured throughout (`viewport-fit=cover`), so nothing
+  hides behind a notch or home indicator.
+
+Webfonts load from Google's CDN and are deliberately not cached by the worker,
+so an offline visit renders in fallback faces. Self-host the fonts if offline
+fidelity matters.
+
 ## Accessibility & behaviour notes
 
 - Every section is readable and usable with JavaScript disabled; the scripts are
@@ -81,6 +99,10 @@ note.)
   testimonial auto-rotation.
 - Skip link, visible `:focus-visible` rings, labelled form fields, `aria-current`
   on the tour and testimonial controls, Escape closes the mobile menu.
+- Every interactive element clears 44px of height on coarse pointers; verified
+  by measuring the rendered boxes, not by eye.
+- Hero text contrast is measured against the actual photograph behind it:
+  wordmark 3.55:1, headline 4.09:1, subhead 6.36:1, hero nav 16.3:1.
 - Gold on anthracite is the brand's 5.2:1 pairing; body copy sits well above 4.5:1.
 
 ## Placeholder content
