@@ -96,25 +96,6 @@
     });
   }
 
-  /* --- Hero search tabs -------------------------------------------------- */
-  const search = $('[data-search]');
-  if (search) {
-    const tabs = $$('[data-tab]', search);
-    const priceLabel = $('[data-price-label]', search);
-    // Rent swaps the price axis from capital value to annual rent.
-    const labels = {
-      buy: 'Max price (AED)',
-      rent: 'Max rent (AED / yr)',
-      offplan: 'Max price (AED)',
-    };
-    tabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
-        tabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
-        if (priceLabel) priceLabel.textContent = labels[tab.dataset.tab] || labels.buy;
-      });
-    });
-  }
-
   /* --- Scroll reveal ----------------------------------------------------- */
   const revealables = $$('.reveal');
   if (reduced || !('IntersectionObserver' in window)) {
