@@ -111,40 +111,6 @@
     revealables.forEach((el) => io.observe(el));
   }
 
-  /* --- Stat counters ----------------------------------------------------- */
-  const stats = $$('[data-count]');
-  const runCount = (el) => {
-    const target = parseFloat(el.dataset.count);
-    const prefix = el.dataset.prefix || '';
-    const suffix = el.dataset.suffix || '';
-    const decimals = (el.dataset.count.split('.')[1] || '').length;
-    const duration = 1500;
-    const start = performance.now();
-
-    const frame = (now) => {
-      const t = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      const value = target * eased;
-      el.textContent = prefix + value.toLocaleString('en-US', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-      }) + suffix;
-      if (t < 1) requestAnimationFrame(frame);
-    };
-    requestAnimationFrame(frame);
-  };
-
-  if (!reduced && 'IntersectionObserver' in window) {
-    const statIO = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        runCount(entry.target);
-        statIO.unobserve(entry.target);
-      });
-    }, { threshold: 0.6 });
-    stats.forEach((el) => statIO.observe(el));
-  }
-
   /* --- Listing category filter --------------------------------------------- */
   const catTabs = $$('.cats__tab');
   const tileWrap = $('[data-tiles]');

@@ -42,7 +42,6 @@ These are placeholders written to demonstrate the layout:
 - **Contact** — `+971 50 000 0000`, `nicolas@obelum.ae`, `obelum.ae` (taken from
   the brand sheet's business-card mock-up; confirm they are live)
 - **Licence line** — `RERA ORN 00000 · DED 000000` in the footer
-- **Statistics** — AED 2.4B advised, 640+ properties, 38 communities, 11 years
 - **Listings** — all six cards and the Emirates Hills signature listing
 - **Tours, insights and testimonials** — titles, durations, excerpts and names
 - **Social links** — all four currently point at `#`
