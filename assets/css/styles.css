@@ -630,6 +630,14 @@ body.nav-open { overflow: hidden; }
   font-size: 1.25rem;
 }
 
+/* Centres the trailing call to action under a section. Lost when the card
+   grid became tiles; the pill had been sitting left-aligned since. */
+.section__foot {
+  display: flex;
+  justify-content: center;
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+}
+
 /* ---- Outlined pill ---- */
 .pill {
   display: inline-flex;
@@ -647,70 +655,6 @@ body.nav-open { overflow: hidden; }
   transition: background 320ms var(--ease), color 320ms var(--ease), border-color 320ms var(--ease);
 }
 .pill:hover { background: var(--chalk-white); border-color: var(--chalk-white); color: var(--ink-deep); }
-
-/* ==========================================================================
-   Signature listing — full-bleed split
-   ========================================================================== */
-.signature { display: grid; grid-template-columns: 1fr; }
-@media (min-width: 64rem) { .signature { grid-template-columns: 1.05fr 1fr; } }
-.signature__media { position: relative; min-height: 22rem; overflow: hidden; }
-.signature__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.signature__tag {
-  position: absolute; top: clamp(1.25rem, 3vw, 2.5rem); left: clamp(1.25rem, 3vw, 2.5rem);
-  background: rgba(28,30,29,.8);
-  backdrop-filter: blur(6px);
-  color: var(--gold);
-  padding: 0.6rem 1rem;
-  font: 500 0.625rem/1 var(--mono);
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-}
-.signature__body {
-  background: var(--raw-umber);
-  color: var(--chalk-white);
-  padding: clamp(2.75rem, 6vw, 5.5rem) clamp(1.75rem, 5vw, 5rem);
-  display: flex; flex-direction: column; justify-content: center;
-  gap: clamp(1.25rem, 2.4vw, 2rem);
-}
-.signature__body .eyebrow { color: rgba(247,245,241,.76); }
-.signature__body .h2 { color: var(--chalk-white); }
-.signature__body .h2 .italic { color: var(--timberwolf); }
-.signature__price {
-  font-family: var(--serif);
-  font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.25rem);
-  color: var(--chalk-white);
-}
-.signature__price small {
-  font-family: var(--mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  opacity: 0.74;
-  margin-left: 0.5rem;
-}
-.spec-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  background: rgba(247,245,241,.22);
-  border: 1px solid rgba(247,245,241,.22);
-}
-@media (min-width: 40rem) { .spec-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.spec-list div { background: var(--raw-umber); padding: 1rem 1.125rem; }
-.spec-list dt {
-  font: 400 0.5625rem/1 var(--mono);
-  letter-spacing: 0.2em; text-transform: uppercase;
-  color: rgba(247,245,241,.7);
-}
-.spec-list dd {
-  margin: 0.55rem 0 0;
-  font-family: var(--serif);
-  font-size: 1.25rem;
-  color: var(--chalk-white);
-}
-.signature__actions { display: flex; flex-wrap: wrap; gap: 1rem; }
-.signature__body .btn--ghost { --btn-fg: var(--chalk-white); --btn-line: rgba(247,245,241,.4); }
-.signature__body .btn--ghost:hover { --btn-bg: var(--chalk-white); --btn-fg: var(--raw-umber); --btn-line: var(--chalk-white); }
 
 /* ==========================================================================
    Tours (video-led section)
