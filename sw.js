@@ -1,13 +1,13 @@
 /* Obelum Properties — offline shell.
    The document is network-first so a new deploy is picked up immediately;
    static assets are stale-while-revalidate. Bump CACHE to invalidate. */
-const CACHE = 'obelum-v2';
+const CACHE = 'obelum-v1';
 const SHELL = [
   '/',
-  '/assets/css/styles.css?v=4',
-  '/assets/js/main.js?v=4',
+  '/assets/css/styles.css?v=3',
+  '/assets/js/main.js?v=3',
   '/assets/img/obelum-logo.png',
-  '/assets/img/hero-1.webp',
+  '/assets/img/hero.webp',
 ];
 
 self.addEventListener('install', (e) => {

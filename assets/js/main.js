@@ -1,5 +1,5 @@
-/* Obelum Properties — homepage behaviour.
-   Progressive enhancement only: every section works with JavaScript off. */
+/* Obelum Properties — homepage behaviour
+   Progressive enhancement only: every section is readable with JS disabled. */
 (() => {
   'use strict';
 
@@ -7,18 +7,72 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* --- Header ------------------------------------------------------------- */
+  /* --- Sticky header + hero nav ------------------------------------------ */
   const header = $('[data-header]');
+  const heroNav = $('.hero-nav');
   if (header) {
+    const threshold = () => Math.max(window.innerHeight * 0.72, 260);
     const onScroll = () => {
-      header.classList.toggle('is-stuck', window.scrollY > Math.max(innerHeight * 0.7, 240));
+      const stuck = window.scrollY > threshold();
+      header.classList.toggle('is-stuck', stuck);
+      // The nav only exists at the foot of the hero, so it rides up into the
+      // condensed bar rather than scrolling out of reach.
+      if (heroNav) heroNav.classList.toggle('is-stuck', stuck);
     };
     addEventListener('scroll', onScroll, { passive: true });
     addEventListener('resize', onScroll);
     onScroll();
   }
 
-  /* --- Mobile navigation --------------------------------------------------- */
+  /* --- Hero slideshow + motion toggle ------------------------------------- */
+  const mediaToggle = $('[data-media-toggle]');
+  const hero = $('.hero');
+  if (hero) {
+    const slides = $$('.hero__slide', hero);
+    const video = $('[data-hero-video]', hero);
+    const HOLD = 6500;                   // time each slide is held before the fade
+    let index = Math.max(0, slides.findIndex((s) => s.classList.contains('is-active')));
+    let timer = null;
+    // Reduced-motion visitors start paused on the first frame.
+    let paused = reduced;
+
+    const advance = () => {
+      if (slides.length < 2) return;
+      slides[index].classList.remove('is-active');
+      index = (index + 1) % slides.length;
+      const next = slides[index];
+      // Restart the drift so each slide pushes in from its own starting scale.
+      next.style.animation = 'none';
+      void next.offsetWidth;
+      next.style.animation = '';
+      next.classList.add('is-active');
+    };
+
+    const stop = () => { clearInterval(timer); timer = null; };
+    const start_ = () => {
+      stop();
+      if (!paused && slides.length > 1 && !document.hidden) timer = setInterval(advance, HOLD);
+    };
+
+    const apply = () => {
+      hero.classList.toggle('is-paused', paused);
+      if (mediaToggle) {
+        mediaToggle.setAttribute('aria-pressed', String(paused));
+        mediaToggle.setAttribute('aria-label', paused ? 'Play background motion' : 'Pause background motion');
+      }
+      if (video) paused ? video.pause() : video.play().catch(() => {});
+      start_();
+    };
+
+    apply();
+    if (mediaToggle) {
+      mediaToggle.addEventListener('click', () => { paused = !paused; apply(); });
+    }
+    // Don't burn cycles fading images nobody is looking at.
+    document.addEventListener('visibilitychange', () => { document.hidden ? stop() : start_(); });
+  }
+
+  /* --- Mobile navigation ------------------------------------------------ */
   const burger = $('[data-burger]');
   const mobileNav = $('[data-mobile-nav]');
   if (burger && mobileNav) {
@@ -28,67 +82,106 @@
       mobileNav.classList.toggle('is-open', open);
       document.body.classList.toggle('nav-open', open);
     };
-    burger.addEventListener('click', () => setOpen(burger.getAttribute('aria-expanded') !== 'true'));
-    mobileNav.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+    burger.addEventListener('click', () => {
+      setOpen(burger.getAttribute('aria-expanded') !== 'true');
+    });
+    mobileNav.addEventListener('click', (e) => {
+      if (e.target.closest('a')) setOpen(false);
+    });
     addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') { setOpen(false); burger.focus(); }
+      if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        burger.focus();
+      }
     });
   }
 
-  /* --- Hero slides --------------------------------------------------------- */
-  const hero = $('.hero');
-  if (hero) {
-    const slides = $$('.hero__slide', hero);
-    const HOLD = 6500;
-    let index = Math.max(0, slides.findIndex((s) => s.classList.contains('is-active')));
-    let timer = null;
-
-    const advance = () => {
-      if (slides.length < 2) return;
-      slides[index].classList.remove('is-active');
-      index = (index + 1) % slides.length;
-      const next = slides[index];
-      // Restart the drift so each slide arrives on its own motion.
-      next.style.animation = 'none';
-      void next.offsetWidth;
-      next.style.animation = '';
-      next.classList.add('is-active');
-    };
-    const stop  = () => { clearInterval(timer); timer = null; };
-    const start = () => { stop(); if (!reduced && slides.length > 1 && !document.hidden) timer = setInterval(advance, HOLD); };
-
-    start();
-    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+  /* --- Scroll reveal ----------------------------------------------------- */
+  const revealables = $$('.reveal');
+  if (reduced || !('IntersectionObserver' in window)) {
+    revealables.forEach((el) => el.classList.add('is-in'));
+  } else {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+    revealables.forEach((el) => io.observe(el));
   }
 
-  /* --- Listings filter ----------------------------------------------------- */
+  /* --- Listing category filter --------------------------------------------- */
   const catTabs = $$('.cats__tab');
   const tileWrap = $('[data-tiles]');
   if (catTabs.length && tileWrap) {
-    const lets = $$('.let', tileWrap);
+    const tiles = $$('.tile', tileWrap);
     const empty = document.createElement('p');
-    empty.className = 'lead';
+    empty.className = 'tiles__empty';
     empty.hidden = true;
-    empty.textContent = 'Nothing in that community this week.';
+    empty.textContent = 'Nothing in this category right now.';
     tileWrap.appendChild(empty);
 
     const show = (cat) => {
       let shown = 0;
-      lets.forEach((el) => {
-        const match = (el.dataset.cats || '').split(/\s+/).includes(cat);
-        el.hidden = !match;
+      tiles.forEach((t) => {
+        const match = (t.dataset.cats || '').split(/\s+/).includes(cat);
+        t.hidden = !match;
         if (match) shown++;
       });
       empty.hidden = shown > 0;
     };
-    catTabs.forEach((tab) => tab.addEventListener('click', () => {
-      catTabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
-      show(tab.dataset.cat);
-    }));
-    show((catTabs.find((t) => t.getAttribute('aria-selected') === 'true') || catTabs[0]).dataset.cat);
+
+    catTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        catTabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+        show(tab.dataset.cat);
+      });
+    });
+
+    const initial = catTabs.find((t) => t.getAttribute('aria-selected') === 'true') || catTabs[0];
+    show(initial.dataset.cat);
   }
 
-  /* --- Feed carousel ------------------------------------------------------- */
+  /* --- Testimonials ------------------------------------------------------ */
+  const quotesRoot = $('[data-quotes]');
+  if (quotesRoot) {
+    const quotes = $$('[data-quote]', quotesRoot);
+    const dots = $('.quotes__dots', quotesRoot);
+    let index = 0;
+    let timer = null;
+
+    const show = (next) => {
+      index = (next + quotes.length) % quotes.length;
+      quotes.forEach((q, i) => q.classList.toggle('is-active', i === index));
+      $$('button', dots).forEach((d, i) => d.setAttribute('aria-current', String(i === index)));
+    };
+
+    quotes.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.setAttribute('role', 'tab');
+      dot.setAttribute('aria-label', `Testimonial ${i + 1}`);
+      dot.setAttribute('aria-current', String(i === 0));
+      dot.addEventListener('click', () => { show(i); restart(); });
+      dots.appendChild(dot);
+    });
+
+    const restart = () => {
+      if (reduced) return;
+      clearInterval(timer);
+      timer = setInterval(() => show(index + 1), 7000);
+    };
+
+    quotesRoot.addEventListener('mouseenter', () => clearInterval(timer));
+    quotesRoot.addEventListener('mouseleave', restart);
+    document.addEventListener('visibilitychange', () => {
+      document.hidden ? clearInterval(timer) : restart();
+    });
+    restart();
+  }
+
+  /* --- Instagram feed carousel --------------------------------------------- */
   const feedTrack = $('[data-feed-track]');
   if (feedTrack) {
     const arrows = $$('[data-feed]');
@@ -98,13 +191,17 @@
       const gap = parseFloat(getComputedStyle(feedTrack).columnGap) || 0;
       return first.getBoundingClientRect().width + gap;
     };
-    // Grey the arrows at each end rather than letting them do nothing.
+
+    // Grey the arrows out at each end rather than letting them do nothing.
     const sync = () => {
       const max = feedTrack.scrollWidth - feedTrack.clientWidth;
       const x = feedTrack.scrollLeft;
-      arrows.forEach((a) => a.toggleAttribute('disabled',
-        a.dataset.feed === 'next' ? x >= max - 2 : x <= 2));
+      arrows.forEach((a) => {
+        const atEnd = a.dataset.feed === 'next' ? x >= max - 2 : x <= 2;
+        a.toggleAttribute('disabled', atEnd);
+      });
     };
+
     arrows.forEach((a) => a.addEventListener('click', () => {
       feedTrack.scrollBy({ left: a.dataset.feed === 'next' ? step() : -step(),
                            behavior: reduced ? 'auto' : 'smooth' });
@@ -116,11 +213,14 @@
   }
 
   /* --- Service worker ------------------------------------------------------ */
+  // Only over http(s); registering from file:// throws.
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-    addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
   }
 
-  /* --- Footer year --------------------------------------------------------- */
+  /* --- Footer year -------------------------------------------------------- */
   const year = $('[data-year]');
   if (year) year.textContent = String(new Date().getFullYear());
 })();
