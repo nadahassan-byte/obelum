@@ -25,9 +25,11 @@
   --muted-light:  rgba(215, 208, 199, 0.66);
 
   /* Type */
-  --serif:  "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
-  --sans:   "Jost", "Helvetica Neue", Arial, sans-serif;
-  --mono:   "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  /* Section 10: Gilda Display for statements, Montserrat for everything else.
+     Regular 400 only on Gilda. No italics, no script, anywhere. */
+  --serif:  "Gilda Display", Georgia, serif;
+  --sans:   "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --mono:   "Montserrat", "Helvetica Neue", Arial, sans-serif;
 
   /* Rhythm */
   --gutter:   clamp(1.25rem, 4.2vw, 4.5rem);
@@ -116,8 +118,10 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.2;
   font-size: clamp(1.3rem, 1.1rem + 0.9vw, 1.9rem);
 }
-.amp, .italic { font-style: italic; }
-.amp { color: var(--gold); }
+/* Rule 04: emphasis in colour, never italic or bold. */
+.amp, .italic { color: var(--raw-umber); }
+.is-dark .italic, .on-dark .italic, .hero .italic, .cta .italic { color: var(--gold); }
+
 
 .lede {
   font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem);
@@ -353,16 +357,17 @@ body.nav-open { overflow: hidden; }
 .hero__scrim {
   position: absolute; inset: 0; z-index: -1;
   background:
-    linear-gradient(to bottom, rgba(24,22,19,.72) 0%, rgba(24,22,19,.36) 14%,
-                               rgba(24,22,19,.10) 34%, rgba(24,22,19,.22) 64%,
-                               rgba(20,19,17,.72) 100%);
+    linear-gradient(to bottom, rgba(24,22,19,.90) 0%, rgba(24,22,19,.74) 8%,
+                               rgba(24,22,19,.46) 16%,
+                               rgba(24,22,19,.34) 40%, rgba(24,22,19,.44) 68%,
+                               rgba(20,19,17,.80) 100%);
 }
 /* A soft centre pool keeps the statement legible over the bright skyline
    without flattening the image around it. */
 .hero__scrim::after {
   content: "";
   position: absolute; inset: 0;
-  background: radial-gradient(60% 42% at 50% 50%, rgba(20,19,17,.42), rgba(20,19,17,0) 70%);
+  background: radial-gradient(56% 38% at 50% 46%, rgba(20,19,17,.56), rgba(20,19,17,0) 72%);
 }
 
 .hero__stage {
@@ -373,18 +378,19 @@ body.nav-open { overflow: hidden; }
   width: 100%;
 }
 .hero__title {
-  font-family: var(--sans);
-  font-weight: 300;
-  text-transform: uppercase;
-  letter-spacing: 0.055em;
-  line-height: 1.16;
-  font-size: clamp(1.75rem, 0.95rem + 3.3vw, 3.9rem);
+  /* Rule 04: one Gilda statement per surface, sentence case. */
+  font-family: var(--serif);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.14;
+  font-size: clamp(1.6rem, 0.95rem + 2.2vw, 2.9rem);
   color: var(--chalk-white);
   text-shadow: 0 2px 30px rgba(11, 36, 48, 0.42);
   max-width: 34ch;   /* wide enough to hold the statement on one line at desktop */
 }
 .hero__sub {
-  font-size: clamp(0.95rem, 0.88rem + 0.4vw, 1.3rem);
+  font-size: clamp(0.875rem, 0.83rem + 0.26vw, 1.0625rem);
   font-weight: 300;
   color: rgba(247, 245, 241, 0.92);
   text-shadow: 0 1px 20px rgba(11, 36, 48, 0.42);
@@ -515,12 +521,12 @@ body.nav-open { overflow: hidden; }
   color: rgba(247, 245, 241, 0.88);
 }
 .statement__title {
-  font-family: var(--sans);
-  font-weight: 300;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  line-height: 1.12;
-  font-size: clamp(1.6rem, 0.85rem + 3.1vw, 3.75rem);
+  font-family: var(--serif);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.16;
+  font-size: clamp(1.5rem, 1.05rem + 1.9vw, 2.65rem);
   color: var(--chalk-white);
   max-width: 20ch;
 }
@@ -690,7 +696,7 @@ body.nav-open { overflow: hidden; }
 }
 .quote.is-active { opacity: 1; visibility: visible; transform: none; }
 .quote p {
-  font-family: var(--serif); font-weight: 300; font-style: italic;
+  font-family: var(--serif); font-weight: 400;
   font-size: clamp(1.3rem, 1rem + 1.4vw, 2.15rem);
   line-height: 1.38;
   color: var(--chalk-white);
@@ -773,7 +779,6 @@ body.nav-open { overflow: hidden; }
 }
 .feed__handle {
   font-family: var(--serif);
-  font-style: italic;
   font-weight: 400;
   text-transform: none;
   letter-spacing: 0;
