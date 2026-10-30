@@ -27,7 +27,7 @@
 <!-- Brand guidelines section 10: Gilda Display for headings, Montserrat for
      everything else. No italics, no script. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Montserrat:wght@300;400;500;600&display=swap">
-<link rel="stylesheet" href="assets/css/styles.css?v=5">
+<link rel="stylesheet" href="assets/css/styles.css?v=6">
 
 <script type="application/ld+json">
 {
@@ -76,6 +76,12 @@
 <main id="main">
 
 <!-- =============================================================== Hero -->
+<!-- The nav is a sibling of the hero, not a child of it. .hero sets
+     isolation: isolate so its -z-index media stays put, and that stacking
+     context also trapped the nav: once pinned it painted underneath the
+     header's bar instead of on it. The wrapper only supplies the positioning
+     box the nav needs at the hero's foot. -->
+<div class="hero-wrap">
 <section class="hero">
   <div class="hero__media">
     <!-- A single hero image. To restore a crossfade, add more
@@ -97,6 +103,8 @@
   </div>
 
   <!-- Primary navigation sits at the foot of the hero. -->
+</section>
+
   <nav class="hero-nav" aria-label="Primary">
     <div class="hero-nav__group">
       <a class="hero-nav__search" href="#listings" aria-label="Search properties">
@@ -114,7 +122,7 @@
       <a class="hero-nav__link" href="#world">The world of Obelum</a>
     </div>
   </nav>
-</section>
+</div>
 
 <!-- =========================================================== Listings -->
 <section class="section listings is-dark on-dark" id="listings">
@@ -307,8 +315,10 @@
 </main>
 
 <!-- =============================================================== Feed -->
-<!-- Layout and carousel only. The posts below are placeholders: a live feed
-     needs a source wired in — see "Instagram feed" in the README. -->
+<!-- Real Obelum social artwork, held in the repo. The carousel is still static:
+     wiring it to the live account needs a source — see "Instagram feed" in the
+     README. The posts are 4:5, the ratio Instagram gives a portrait post, and
+     .feed__item matches it so the copy at the top and bottom edges survives. -->
 <section class="feed is-dark on-dark" id="feed" aria-labelledby="feed-h">
   <div class="shell feed__head">
     <h2 class="feed__title" id="feed-h">
@@ -331,23 +341,42 @@
 
   <div class="feed__track" id="feed-track" data-feed-track tabindex="0" role="group" aria-label="Instagram posts">
       <a class="feed__item" href="https://www.instagram.com/obelum.properties/" target="_blank" rel="noopener">
-        <img src="assets/img/ig-01.svg" alt="" loading="lazy" width="1080" height="1080">
+        <img src="assets/img/ig-01.webp" alt="Introducing Obelum Properties — Discover. Live. Belong." loading="lazy" width="1080" height="1350">
       </a>
       <a class="feed__item" href="https://www.instagram.com/obelum.properties/" target="_blank" rel="noopener">
-        <img src="assets/img/ig-02.svg" alt="" loading="lazy" width="1080" height="1080">
+        <img src="assets/img/ig-02.webp" alt="Your next move is everything: freedom, support and opportunity at a Dubai cloud brokerage." loading="lazy" width="1080" height="1350">
       </a>
       <a class="feed__item" href="https://www.instagram.com/obelum.properties/" target="_blank" rel="noopener">
-        <img src="assets/img/ig-03.svg" alt="" loading="lazy" width="1080" height="1080">
+        <img src="assets/img/ig-03.webp" alt="Poised for the extraordinary." loading="lazy" width="1080" height="1350">
       </a>
       <a class="feed__item" href="https://www.instagram.com/obelum.properties/" target="_blank" rel="noopener">
-        <img src="assets/img/ig-04.svg" alt="" loading="lazy" width="1080" height="1080">
+        <img src="assets/img/ig-04.webp" alt="Let’s build something together — we’re hiring. Send your CV to hello@obelum.ae." loading="lazy" width="1080" height="1350">
       </a>
-      <a class="feed__item" href="https://www.instagram.com/obelum.properties/" target="_blank" rel="noopener">
-        <img src="assets/img/ig-05.svg" alt="" loading="lazy" width="1080" height="1080">
-      </a>
-      <a class="feed__item" href="https://www.instagram.com/obelum.properties/" target="_blank" rel="noopener">
-        <img src="assets/img/ig-06.svg" alt="" loading="lazy" width="1080" height="1080">
-      </a>
+  </div>
+</section>
+
+<!-- =========================================================== Signup -->
+<!-- No list is connected yet: the form posts nowhere and main.js intercepts it
+     to point people at hello@obelum.ae. Give the <form> an action when the
+     mailing provider is chosen and delete the handler — see the README. -->
+<section class="signup is-dark on-dark" aria-labelledby="signup-h">
+  <div class="shell signup__inner">
+    <h2 class="signup__title" id="signup-h">
+      The latest in Dubai property, <span class="italic">lifestyle &amp; culture</span>, curated just for you.
+    </h2>
+    <form class="signup__form" data-signup novalidate>
+      <label class="signup__label" for="signup-email">Enter your email</label>
+      <div class="signup__control">
+        <input class="signup__input" id="signup-email" name="email" type="email"
+               autocomplete="email" placeholder="Enter your email" required>
+        <button class="signup__go" type="submit" aria-label="Subscribe">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 2.5 11.5 8 6 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <p class="signup__note" data-signup-note role="status"></p>
+    </form>
   </div>
 </section>
 
@@ -407,6 +436,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=5" defer></script>
+<script src="assets/js/main.js?v=6" defer></script>
 </body>
 </html>

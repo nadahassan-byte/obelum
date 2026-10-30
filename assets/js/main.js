@@ -11,9 +11,23 @@
   const header = $('[data-header]');
   const heroNav = $('.hero-nav');
   if (header) {
-    const threshold = () => Math.max(window.innerHeight * 0.72, 260);
+    let docked = 0;
+    // Hand the nav over to the pinned bar exactly as it would slide underneath
+    // it, so the menu appears to stick rather than jump. Measured, not a guess
+    // at the hero's height: a fixed fraction of the viewport docked it early
+    // and the nav teleported up while still plainly in view.
+    const threshold = () => {
+      if (heroNav && heroNav.offsetParent) {
+        const top = heroNav.getBoundingClientRect().top + window.scrollY;
+        return Math.max(top - header.offsetHeight, 0);
+      }
+      return Math.max(window.innerHeight * 0.72, 260);
+    };
     const onScroll = () => {
-      const stuck = window.scrollY > threshold();
+      // Read the threshold off the unstuck layout only; once the nav is fixed
+      // its own rect no longer tracks the page and the test would never clear.
+      if (!header.classList.contains('is-stuck')) docked = threshold();
+      const stuck = window.scrollY > docked;
       header.classList.toggle('is-stuck', stuck);
       // The nav only exists at the foot of the hero, so it rides up into the
       // condensed bar rather than scrolling out of reach.
@@ -188,6 +202,30 @@
       document.hidden ? clearInterval(timer) : restart();
     });
     restart();
+  }
+
+  /* --- Signup ------------------------------------------------------------- */
+  // There is no mailing list behind this yet. Rather than drop the address on
+  // the floor or claim a subscription that did not happen, send people to an
+  // inbox that exists. Remove this block once the form has a real action.
+  const signup = $('[data-signup]');
+  if (signup) {
+    const note = $('[data-signup-note]', signup);
+    signup.addEventListener('submit', (e) => {
+      if (signup.getAttribute('action')) return;   // a provider is wired in
+      e.preventDefault();
+      const email = $('#signup-email', signup);
+      if (!email.value.trim() || !email.checkValidity()) {
+        if (note) note.textContent = 'Please enter a valid email address.';
+        email.focus();
+        return;
+      }
+      if (note) {
+        note.innerHTML = 'Our list is not open yet \u2014 email ' +
+          '<a href="mailto:hello@obelum.ae?subject=Newsletter">hello@obelum.ae</a> ' +
+          'and we will add you.';
+      }
+    });
   }
 
   /* --- Instagram feed carousel --------------------------------------------- */

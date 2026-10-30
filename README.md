@@ -76,8 +76,9 @@ note.)
 ## Instagram feed
 
 The section above the footer is **layout and carousel only — it does not pull
-live posts.** The six squares are placeholders. Swapping them by hand works,
-but goes stale; connecting a real source needs one of:
+live posts.** It holds four real Obelum posts (`assets/img/ig-01…04.webp`,
+1080×1350) committed to the repo. Swapping them by hand works, but goes stale;
+connecting a real source needs one of:
 
 1. **Instagram Graph API.** Requires a Business or Creator account linked to a
    Facebook Page, a Meta app, and a long-lived access token. Tokens expire
@@ -88,8 +89,22 @@ but goes stale; connecting a real source needs one of:
    up, costs a subscription, and adds a third-party script to the page.
 
 Either way the markup to fill is `.feed__track` — one `<a class="feed__item">`
-per post, each wrapping a square image. The carousel, arrows and scroll-snap
-work off whatever children are there, so nothing else needs changing.
+per post, each wrapping an image. The carousel, arrows and scroll-snap work off
+whatever children are there, so nothing else needs changing.
+
+`.feed__item` is `aspect-ratio: 4 / 5`, matching the portrait posts Instagram
+serves. Because the tile and the artwork agree, `object-fit: cover` crops
+nothing — which matters here, as every post carries copy hard against its top
+and bottom edges. Feeding it square or landscape images will crop them; change
+the ratio to suit whatever the live source returns.
+
+## Newsletter signup
+
+The band between the feed and the footer has **no mailing list behind it.** The
+`<form>` has no `action`, and `main.js` intercepts the submit to point people
+at `hello@obelum.ae` instead of silently dropping the address. When a provider
+is chosen, give the form its `action` (the handler stands down on its own once
+`action` is set) and delete the `[data-signup]` block in `main.js`.
 
 The heading links to `instagram.com/obelum.properties`; correct that handle if
 it differs.

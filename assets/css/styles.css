@@ -229,10 +229,11 @@ a { color: inherit; text-decoration: none; }
   transition: background 420ms var(--ease), min-height 420ms var(--ease);
 }
 /* Once past the hero the bar condenses and carries the nav, which otherwise
-   only exists at the foot of the hero. */
+   only exists at the foot of the hero. The wordmark stays centred and the nav
+   groups dock either side of it, so the pinned bar reads the same way as the
+   hero does rather than rearranging itself into a different masthead. */
 .site-header.is-stuck {
   position: fixed;
-  justify-content: flex-start;
   min-height: 4rem;
   background: rgba(28, 30, 29, 0.94);
   backdrop-filter: blur(14px);
@@ -296,6 +297,11 @@ body.nav-open { overflow: hidden; }
 /* ==========================================================================
    Hero
    ========================================================================== */
+/* Positioning box for the hero nav. Deliberately plain: no isolation, no
+   transform, no overflow — anything that opened a stacking context here would
+   put the pinned nav back underneath the header. */
+.hero-wrap { position: relative; }
+
 .hero {
   position: relative;
   min-height: 100svh;
@@ -423,17 +429,27 @@ body.nav-open { overflow: hidden; }
 }
 @media (min-width: 64rem) { .hero-nav { display: flex; } }
 
+/* Pinned, the nav keeps its two groups hard left and hard right; the header's
+   centred wordmark shows through the gap between them. Same 4rem as the
+   header, so the two fixed bars sit on exactly the same band. */
 .hero-nav.is-stuck {
   position: fixed;
   top: 0; bottom: auto;
   z-index: 101;
-  justify-content: flex-end;
   gap: clamp(1.5rem, 3vw, 3rem);
   min-height: 4rem;
   padding-block: 0;
 }
 
 .hero-nav__group { display: flex; align-items: center; gap: clamp(1.1rem, 2.2vw, 2.1rem); }
+/* The nav only appears at 64rem, and that is also where the pinned bar is
+   tightest: two groups plus the centred wordmark on one 4rem row. Measured at
+   1024px the right group came within 17px of the logo, so tighten the tracking
+   and the gaps until the bar widens enough to carry them. */
+@media (min-width: 64rem) and (max-width: 74.99rem) {
+  .hero-nav.is-stuck .hero-nav__group { gap: 1.35rem; }
+  .hero-nav.is-stuck .hero-nav__link { letter-spacing: 0.085em; }
+}
 .hero-nav__link {
   font: 400 0.8125rem/1 var(--sans);
   letter-spacing: 0.14em;
@@ -886,7 +902,7 @@ body.nav-open { overflow: hidden; }
   grid-auto-flow: column;
   /* A definite width, not minmax(0, …): with a 0 minimum the six tracks just
      shrink to fit and the carousel never overflows, so it cannot scroll. */
-  grid-auto-columns: 72%;
+  grid-auto-columns: 66%;
   gap: clamp(0.4rem, 0.8vw, 0.7rem);
   padding-inline: var(--gutter);
   overflow-x: auto;
@@ -895,13 +911,16 @@ body.nav-open { overflow: hidden; }
   overscroll-behavior-x: contain;
 }
 .feed__track::-webkit-scrollbar { display: none; }
-@media (min-width: 46rem) { .feed__track { grid-auto-columns: 44%; } }
-@media (min-width: 72rem) { .feed__track { grid-auto-columns: 31.8%; } }
+@media (min-width: 46rem) { .feed__track { grid-auto-columns: 42%; } }
+@media (min-width: 72rem) { .feed__track { grid-auto-columns: 30%; } }
 
 .feed__item {
   position: relative;
   display: block;
-  aspect-ratio: 1;
+  /* 4:5, the ratio of the artwork. Matching it exactly means object-fit has
+     nothing to crop, so the copy sitting on the top and bottom edges of each
+     post stays whole. A square tile cut both off. */
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background: var(--ink-deep);
   scroll-snap-align: start;
@@ -912,6 +931,85 @@ body.nav-open { overflow: hidden; }
   transition: transform 900ms var(--ease), opacity 400ms var(--ease);
 }
 .feed__item:hover img { transform: scale(1.05); opacity: 0.86; }
+
+/* ==========================================================================
+   Signup — a quiet band between the feed and the footer
+   ========================================================================== */
+.signup {
+  background: var(--ink-deep);
+  padding-block: clamp(3.25rem, 6vw, 5.25rem);
+  border-top: 1px solid var(--rule-light);
+}
+.signup__inner {
+  display: grid;
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+  align-items: center;
+}
+@media (min-width: 60rem) {
+  .signup__inner { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+}
+.signup__title {
+  font: 400 clamp(1.5rem, 1.1rem + 1.6vw, 2.375rem)/1.24 var(--serif);
+  color: var(--chalk-white);
+  max-width: 24ch;
+  margin: 0;
+}
+
+/* The label is the visible prompt until the field has something in it; the
+   placeholder repeats it so the prompt survives for anyone who cannot see the
+   label's position. */
+.signup__label {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.signup__control {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.3rem 0.35rem 0.3rem 1.5rem;
+  border: 1px solid rgba(215, 208, 199, 0.34);
+  border-radius: 999px;
+  transition: border-color 320ms var(--ease);
+}
+.signup__control:focus-within { border-color: var(--gold); }
+.signup__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 2.75rem;
+  background: none;
+  border: 0;
+  color: var(--chalk-white);
+  font: 400 0.8125rem/1 var(--sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.signup__input::placeholder { color: rgba(215, 208, 199, 0.62); }
+.signup__input:focus { outline: none; }
+.signup__go {
+  flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.5rem; height: 2.5rem;
+  border: 1px solid rgba(215, 208, 199, 0.34);
+  border-radius: 50%;
+  background: none;
+  color: var(--timberwolf);
+  cursor: pointer;
+  transition: background 320ms var(--ease), color 320ms var(--ease), border-color 320ms var(--ease);
+}
+.signup__go:hover {
+  background: var(--chalk-white);
+  border-color: var(--chalk-white);
+  color: var(--ink-deep);
+}
+.signup__note {
+  margin: 0.875rem 0 0;
+  min-height: 1.25rem;
+  font: 400 0.8125rem/1.5 var(--sans);
+  color: var(--muted-light);
+}
 
 /* ==========================================================================
    Footer
