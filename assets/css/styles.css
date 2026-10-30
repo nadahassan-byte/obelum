@@ -394,8 +394,14 @@ body.nav-open { overflow: hidden; }
   font-weight: 300;
   color: rgba(247, 245, 241, 0.92);
   text-shadow: 0 1px 20px rgba(11, 36, 48, 0.42);
-  max-width: 48ch;
-  text-wrap: balance;   /* keeps "here." off a line of its own */
+  /* Uncapped, so the line sits whole on one row from tablet up. Below that it
+     must wrap: forcing nowrap ran it 190px past a 390px screen, where the
+     hero's own overflow:hidden silently cut the end off. */
+  max-width: none;
+}
+
+@media (min-width: 48rem) {
+  .hero__sub { white-space: nowrap; }
 }
 
 /* Outlined pill with a caret. */
