@@ -394,7 +394,8 @@ body.nav-open { overflow: hidden; }
   font-weight: 300;
   color: rgba(247, 245, 241, 0.92);
   text-shadow: 0 1px 20px rgba(11, 36, 48, 0.42);
-  max-width: 42ch;
+  max-width: 48ch;
+  text-wrap: balance;   /* keeps "here." off a line of its own */
 }
 
 /* Outlined pill with a caret. */
