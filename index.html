@@ -53,15 +53,6 @@
          alt="Obelum Properties" width="1748" height="498" fetchpriority="high">
   </a>
 
-  <button class="media-toggle" type="button" aria-pressed="false"
-          aria-label="Pause background motion" data-media-toggle>
-    <svg viewBox="0 0 28 28" width="28" height="28" fill="none" aria-hidden="true">
-      <circle cx="14" cy="14" r="13" stroke="currentColor" stroke-width="1.1"/>
-      <path class="icon-play"  d="M11.5 9.5 17 14l-5.5 4.5z" fill="currentColor"/>
-      <path class="icon-pause" d="M12 9.5v9M16.5 9.5v9" stroke="currentColor" stroke-width="1.6"/>
-    </svg>
-  </button>
-
   <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu" data-burger>
     <span></span><span></span><span></span>
   </button>
@@ -73,7 +64,7 @@
     <li><a href="#listings">Rent</a></li>
     <li><a href="#valuation">Sell</a></li>
     <li><a href="#listings">New developments</a></li>
-    <li><a href="#services">The world of Obelum</a></li>
+    <li><a href="#world">The world of Obelum</a></li>
   </ul>
   <div class="mobile-nav__meta">
     <a href="tel:+971500000000">+971 50 000 0000</a>
@@ -120,7 +111,7 @@
     </div>
     <div class="hero-nav__group hero-nav__group--end">
       <a class="hero-nav__link" href="#listings">New developments</a>
-      <a class="hero-nav__link" href="#services">The world of Obelum</a>
+      <a class="hero-nav__link" href="#world">The world of Obelum</a>
     </div>
   </nav>
 </section>
@@ -215,44 +206,33 @@
   </div>
 </section>
 
-<!-- =========================================================== Services -->
-<section class="section" id="services">
-  <div class="shell">
-    <header class="section-head">
-      <div>
-        <span class="eyebrow">What we do</span>
-        <h2 class="h2">Four jobs, <span class="italic">done properly.</span></h2>
-      </div>
-      <p class="lede">No department does a thing it cannot justify in writing.</p>
-    </header>
-
-    <div class="services">
-      <article class="service reveal">
-        <span class="service__n">01</span>
-        <h3>Buying</h3>
-        <p>We shortlist against your brief, then argue the other side of every property on it before you view.</p>
-        <a class="link" href="#">Start a search</a>
-      </article>
-      <article class="service reveal" style="--delay:80ms">
-        <span class="service__n">02</span>
-        <h3>Selling</h3>
-        <p>A price built from comparables you can inspect, film that shows the whole property, and a buyer list that is real.</p>
-        <a class="link" href="#valuation">Get a valuation</a>
-      </article>
-      <article class="service reveal" style="--delay:160ms">
-        <span class="service__n">03</span>
-        <h3>Leasing</h3>
-        <p>Tenant placement and renewals handled end to end, with the Ejari, the index and the notice periods tracked for you.</p>
-        <a class="link" href="#">Let a property</a>
-      </article>
-      <article class="service reveal" style="--delay:240ms">
-        <span class="service__n">04</span>
-        <h3>Investment advisory</h3>
-        <p>Yield modelling net of service charge, void and agency — the version of the number that survives the first year.</p>
-        <a class="link" href="#contact">Talk to us</a>
-      </article>
-    </div>
+<!-- ============================================================== World -->
+<section class="world" id="world" aria-labelledby="world-h">
+  <div class="world__media">
+    <!-- Wants its own photograph; reusing the hero image for now. -->
+    <img src="assets/img/hero.webp" alt="" width="1672" height="941" loading="lazy">
   </div>
+  <div class="world__scrim" aria-hidden="true"></div>
+
+  <div class="shell world__inner">
+    <p class="world__pre" id="world-h">The world of</p>
+    <!-- Rule: never retype the name. The lockup is the artwork, not type. -->
+    <img class="world__mark" src="assets/img/obelum-logo.png"
+         alt="Obelum Properties" width="1748" height="498" loading="lazy">
+    <p class="world__sub">
+      The homes, the communities and the people behind every listing we take on.
+    </p>
+    <a class="world__cta" href="#listings">Explore now</a>
+  </div>
+
+  <button class="world__toggle" type="button" aria-pressed="false"
+          aria-label="Pause background motion" data-media-toggle>
+    <svg viewBox="0 0 28 28" width="28" height="28" fill="none" aria-hidden="true">
+      <circle cx="14" cy="14" r="13" stroke="currentColor" stroke-width="1.1"/>
+      <path class="icon-play"  d="M11.5 9.5 17 14l-5.5 4.5z" fill="currentColor"/>
+      <path class="icon-pause" d="M12 9.5v9M16.5 9.5v9" stroke="currentColor" stroke-width="1.6"/>
+    </svg>
+  </button>
 </section>
 
 <!-- ======================================================= Testimonials -->
@@ -401,7 +381,7 @@
       <h4>Company</h4>
       <ul>
         <li><a href="#listings">New developments</a></li>
-        <li><a href="#services">The world of Obelum</a></li>
+        <li><a href="#world">The world of Obelum</a></li>
         <li><a href="#valuation">List with us</a></li>
       </ul>
     </div>

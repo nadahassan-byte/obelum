@@ -26,6 +26,22 @@
 
   /* --- Hero slideshow + motion toggle ------------------------------------- */
   const mediaToggle = $('[data-media-toggle]');
+  const world = $('.world');
+  // The toggle lives in the world panel and pauses its drift, and will drive a
+  // <video data-world-video> there if one is ever added.
+  if (mediaToggle && world) {
+    const wv = $('[data-world-video]', world);
+    let paused = reduced;
+    const apply = () => {
+      world.classList.toggle('is-paused', paused);
+      mediaToggle.setAttribute('aria-pressed', String(paused));
+      mediaToggle.setAttribute('aria-label', paused ? 'Play background motion' : 'Pause background motion');
+      if (wv) paused ? wv.pause() : wv.play().catch(() => {});
+    };
+    apply();
+    mediaToggle.addEventListener('click', () => { paused = !paused; apply(); });
+  }
+
   const hero = $('.hero');
   if (hero) {
     const slides = $$('.hero__slide', hero);
@@ -56,18 +72,11 @@
 
     const apply = () => {
       hero.classList.toggle('is-paused', paused);
-      if (mediaToggle) {
-        mediaToggle.setAttribute('aria-pressed', String(paused));
-        mediaToggle.setAttribute('aria-label', paused ? 'Play background motion' : 'Pause background motion');
-      }
       if (video) paused ? video.pause() : video.play().catch(() => {});
       start_();
     };
 
     apply();
-    if (mediaToggle) {
-      mediaToggle.addEventListener('click', () => { paused = !paused; apply(); });
-    }
     // Don't burn cycles fading images nobody is looking at.
     document.addEventListener('visibilitychange', () => { document.hidden ? stop() : start_(); });
   }
