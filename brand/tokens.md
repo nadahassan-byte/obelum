@@ -1,50 +1,60 @@
-# Obelum Properties — brand tokens
+# Obelum Properties — design tokens
 
-Source: the *Raw Umber & Timberwolf* brand sheet (Option 16).
+Source: **Obelum Brand Guidelines v1.0, October 2026** (the supplied PDF).
 Declared as custom properties at the top of `assets/css/styles.css`.
 
-## Palette
+## Palette — section 09
 
-| Token | Hex | RGB | Pantone | Role |
-|-------|-----|-----|---------|------|
-| `--anthracite` | `#2D302F` | 45 48 47 | 19-4206 TCX Black Robe | Primary ground — precision, the fine print, read |
-| `--raw-umber` | `#7A5938` | 122 89 56 | 18-1024 TCX Nuthatch | Second ground — the land itself, the real asset |
-| `--timberwolf` | `#D7D0C7` | 215 208 199 | 13-4403 TCX Silver Birch | Primary light — neutral grey, unbiased |
-| `--chalk-white` | `#F7F5F1` | 247 245 241 | 11-4101 TCX Stalactite | Primary light — the clean page, nothing hidden |
-| `--gold` | `#B39F74` | 179 159 116 | 16-1324 TCX Lark | Logo and highlights — the gilded tip of the obelisk |
-| `--smoke` | `#8E8B85` | 142 139 133 | 17-0207 TCX Rock Ridge | Secondary — measured, analytical |
-| `--deep-umber` | `#4A3522` | 74 53 34 | 19-1218 TCX Potting Soil | Secondary — depth and warmth |
+| Token | Hex | Role |
+|-------|-----|------|
+| `--anthracite` | `#2D302F` | Leasing · brand lead |
+| `--deep-umber` | `#4A3522` | Sales · phase 2 |
+| `--raw-umber` | `#7A5938` | Accent |
+| `--gold` | `#B39F74` | The logo · highlights only |
+| `--smoke` | `#8E8B85` | Captions |
+| `--timberwolf` | `#D7D0C7` | Secondary light |
+| `--chalk` | `#F7F5F1` | Main light |
 
-Gold on anthracite is the brand's stated 5.2:1 pairing and is used for the
-wordmark, eyebrows and primary CTAs on dark grounds.
+Dark grounds use the anthracite radial gradient: `#4A4E4C → #2D302F → #1B1D1C`.
 
-## Type
+## Type — section 10
 
-| Token | Family | Used for |
-|-------|--------|----------|
-| `--serif` | Cormorant Garamond | Display headlines, listing titles, prices, pull quotes. Italics carry the emphasis half of every headline. |
-| `--sans` | Jost | The wordmark (wide tracking) and all body copy. |
-| `--mono` | IBM Plex Mono | Eyebrows, labels, specs, nav, buttons — uppercase with 0.16–0.3em tracking. |
+- **Gilda Display**, regular 400 only, for headings and titles. Sentence case.
+- **Montserrat** 300 body · 400 subheadings and labels · 500 prices and facts.
+- **No italics and no script, anywhere.** Emphasis is colour (`.hl`), never
+  italic or bold.
 
-Headline sizes are fluid `clamp()` values; the display scale tops out at 5.25rem.
+## Brand devices — section 11
 
-## Spacing
+- **`.obelus`** — a hairline with a dot above and below its start. It replaces
+  every generic divider: under headings, between promise and proof.
+- **The divided frame** — promise above the line, proof below. Every listing
+  uses it: label, headline, obelus, facts, note, trade-off.
+- **The margin note** — `.let__tradeoff`, the ÷-marked line that names the
+  trade-off.
+- **`.checked`** — the Obelum Checked mark. Only on listings that pass all five
+  checks: permitted, authorised, seen, shot honestly, costed.
 
-- `--gutter` — page inset, `1.25rem → 4.5rem`
-- `--maxw` — `84rem` content measure
-- `--section` — vertical section rhythm, `4.5rem → 9rem`
-- `--ease` / `--slow` — shared motion curve and reveal duration
+## The Ten Rules, as built
 
-## Values that need replacing with real data
+| # | Rule | Where it lives |
+|---|------|----------------|
+| 01 | Promise, then proof | `.let` divided frame |
+| 02 | Leasing is anthracite | `.is-dark` sections, "To let" labels |
+| 03 | Gold is the logo's, never a background | `.hl`, obelus dots, nav underline only |
+| 04 | One Gilda statement per surface | one `.display`/`.h2` per section |
+| 05 | Facts in Montserrat Medium below the line | `.let__facts` |
+| 06 | Every cost shown | move-in total on every listing |
+| 07 | The mark is earned | `.checked` |
+| 08 | Real photos only | hero photography supplied; tiles still placeholder |
+| 09 | Bilingual, equal | عربي in the nav; Arabic pages still to come |
+| 10 | Name the trade-off | `.let__tradeoff` on every listing |
 
-These are placeholders written to demonstrate the layout:
+## Still to supply
 
-- **Contact** — `+971 50 000 0000`, `nicolas@obelum.ae`, `obelum.ae` (taken from
-  the brand sheet's business-card mock-up; confirm they are live)
-- **Licence line** — `RERA ORN 00000 · DED 000000` in the footer
-- **Listings** — all six cards and the Emirates Hills signature listing
-- **Tours, insights and testimonials** — titles, durations, excerpts and names
-- **Social links** — all four currently point at `#`
-
-The only item carried over verbatim from the brand sheet is the JVC listing
-example: *"Two-bed with a working study" — AED 95,000 / yr*.
+- **Listing and feed photography.** `tile-0*.svg` (3:4) and `ig-0*.svg` (1:1)
+  are generated placeholders. Rule 08 requires real photographs.
+- **Arabic pages.** The nav carries عربي; the mirrored right-aligned layout and
+  transcreated copy are not built.
+- **A live Instagram source.** See "Instagram feed" in the README.
+- **Licence numbers.** Trakheesi permit numbers on listings read `[000000]`.
