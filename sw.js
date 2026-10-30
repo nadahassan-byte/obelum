@@ -1,22 +1,14 @@
-/* Obelum Properties — offline shell.
-   The document is network-first so a new deploy is picked up immediately;
-   static assets are stale-while-revalidate. Bump CACHE to invalidate. */
-const CACHE = 'obelum-v3';
-const SHELL = [
-  '/',
-  '/assets/css/styles.css?v=5',
-  '/assets/js/main.js?v=5',
-  '/assets/img/obelum-logo.png',
-  '/assets/img/hero.webp',
-];
+/* Obelum Properties — offline fallback only.
+   Deliberately NOT a caching layer. During active design work a
+   stale-while-revalidate worker serves old markup and assets for a visit or
+   two after each deploy, which has already broken this site twice. Everything
+   is network-first; the cache exists solely so an offline visit still renders.
+   Bump CACHE to retire old stores. */
+const CACHE = 'obelum-v4';
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE)
-      .then((c) => c.addAll(SHELL))
-      .then(() => self.skipWaiting())
-      .catch(() => self.skipWaiting())   // a missing shell entry must not block install
-  );
+  // Take over immediately rather than waiting for every old tab to close.
+  e.waitUntil(self.skipWaiting());
 });
 
 self.addEventListener('activate', (e) => {
@@ -31,33 +23,19 @@ self.addEventListener('fetch', (e) => {
   const { request } = e;
   if (request.method !== 'GET' || new URL(request.url).origin !== location.origin) return;
 
-  // Navigations: network first, fall back to the cached shell when offline.
-  if (request.mode === 'navigate') {
-    e.respondWith(
-      fetch(request)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put('/', copy));
-          return res;
-        })
-        .catch(() => caches.match('/').then((r) => r || Response.error()))
-    );
-    return;
-  }
-
-  // Assets: serve what we have, refresh in the background.
+  // Network first, always. The cache is only a fallback for being offline,
+  // so a deploy is picked up on the very next request.
   e.respondWith(
-    caches.match(request).then((hit) => {
-      const net = fetch(request)
-        .then((res) => {
-          if (res && res.status === 200) {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(request, copy));
-          }
-          return res;
-        })
-        .catch(() => hit);
-      return hit || net;
-    })
+    fetch(request)
+      .then((res) => {
+        if (res && res.status === 200 && res.type === 'basic') {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(request, copy)).catch(() => {});
+        }
+        return res;
+      })
+      .catch(() => caches.match(request).then((hit) =>
+        hit || (request.mode === 'navigate' ? caches.match('/') : undefined)
+      ))
   );
 });

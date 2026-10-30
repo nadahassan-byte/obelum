@@ -215,6 +215,14 @@
   /* --- Service worker ------------------------------------------------------ */
   // Only over http(s); registering from file:// throws.
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    // When a new worker takes control, reload once so the page is never left
+    // showing markup from the previous deploy.
+    let reloading = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (reloading) return;
+      reloading = true;
+      location.reload();
+    });
     addEventListener('load', () => {
       navigator.serviceWorker.register('sw.js').catch(() => {});
     });
