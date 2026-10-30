@@ -945,13 +945,18 @@ body.nav-open { overflow: hidden; }
   gap: clamp(1.75rem, 3.5vw, 3rem);
   align-items: center;
 }
+/* Grid children size to their content by default, so the 16px field forced
+   the column wider than a 320px screen and dragged the headline out with it. */
+.signup__inner > * { min-width: 0; }
 @media (min-width: 60rem) {
   .signup__inner { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
 }
 .signup__title {
   font: 400 clamp(1.5rem, 1.1rem + 1.6vw, 2.375rem)/1.24 var(--serif);
   color: var(--chalk-white);
-  max-width: 24ch;
+  /* ch units do not know how narrow the screen is: 24ch of Gilda ran past a
+     320px viewport on its own. */
+  max-width: min(24ch, 100%);
   margin: 0;
 }
 
@@ -1088,7 +1093,10 @@ a, button, input, select, textarea, label {
   -webkit-tap-highlight-color: transparent;
 }
 @media (max-width: 64rem) {
-  .field input, .field select { font-size: 1rem; }
+  .field input, .field select, .signup__input { font-size: 1rem; }
+  /* 16px costs the uppercase tracking some of its delicacy, but anything
+     smaller makes iOS zoom the page the moment the field takes focus. */
+  .signup__input { letter-spacing: 0.1em; }
 }
 
 /* ---- Touch targets ----------------------------------------------------
@@ -1113,6 +1121,20 @@ a, button, input, select, textarea, label {
   }
   .link { padding-bottom: 0; }
   .socials a { width: 44px; height: 44px; }
+  .signup__go { width: 44px; height: 44px; }
+
+  /* Three of these carry a rule directly under the text — the tab's selected
+     underline, the handle's border. Padding would reach 44px but drag that
+     rule away from the word it belongs to, so the hit area is an invisible
+     overlay centred on the element and the text stays where it is. */
+  .cats__tab, .feed__handle { position: relative; }
+  .cats__tab::before, .feed__handle::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
   .skip-link { min-height: 44px; display: inline-flex; align-items: center; }
   .btn { min-height: 48px; }
   .hero__btn { min-height: 48px; }
