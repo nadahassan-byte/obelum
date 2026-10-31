@@ -204,6 +204,67 @@
     restart();
   }
 
+  /* --- Brief form: the panel follows the chosen intent ------------------- */
+  const brief = $('[data-brief]');
+  if (brief) {
+    const copyBox = $('[data-intent-copy]');
+    const submit  = $('[data-brief-submit]', brief);
+    const note    = $('[data-brief-note]', brief);
+    const defaultSubmit = submit ? submit.textContent.trim() : '';
+    const defaultNote   = note ? note.textContent.trim() : '';
+
+    const show = (key) => {
+      if (copyBox) {
+        const blocks = $$('[data-for]', copyBox);
+        const wanted = blocks.find(b => b.dataset.for === key)
+                    || blocks.find(b => b.dataset.for === 'default');
+        blocks.forEach(b => {
+          const on = b === wanted;
+          b.hidden = !on;
+          // Re-trigger the entrance each time rather than only on first paint.
+          if (on) { b.style.animation = 'none'; void b.offsetWidth; b.style.animation = ''; }
+        });
+      }
+      const picked = $(`.intent__input[value="${key}"]`, brief);
+      if (submit) submit.textContent = (picked && picked.dataset.submit) || defaultSubmit;
+      if (note)   note.textContent   = (picked && picked.dataset.note)   || defaultNote;
+    };
+
+    $$('.intent__input', brief).forEach(r => {
+      r.addEventListener('change', () => r.checked && show(r.value));
+    });
+    // A back/forward restore can hand us a radio already checked.
+    const preset = $('.intent__input:checked', brief);
+    if (preset) show(preset.value);
+
+    // No endpoint behind this either. Say so rather than reloading the page
+    // and dropping whatever they typed, which is what action="#" did.
+    // On the button's click, not the form's submit: submit only fires once the
+    // browser's own required-field checks pass, so asking for an intent there
+    // made people fill in four fields before being told to pick one first.
+    if (submit) {
+      submit.addEventListener('click', (e) => {
+        if (brief.getAttribute('action')) return;
+        if ($('.intent__input:checked', brief)) return;
+        e.preventDefault();
+        if (note) note.textContent = 'Pick one of the four above so we know who should reply.';
+        const first = $('.intent__input', brief);
+        if (first) first.focus();
+      });
+    }
+
+    brief.addEventListener('submit', (e) => {
+      if (brief.getAttribute('action')) return;
+      e.preventDefault();
+      if (!$('.intent__input:checked', brief)) return;
+      if (note) {
+        note.innerHTML = 'Thanks \u2014 nothing is connected behind this form yet. ' +
+          'Email <a href="mailto:hello@obelum.ae?subject=Brief">hello@obelum.ae</a> ' +
+          'and an advisor will pick it up.';
+      }
+    });
+  }
+
   /* --- Signup ------------------------------------------------------------- */
   // There is no mailing list behind this yet. Rather than drop the address on
   // the floor or claim a subscription that did not happen, send people to an

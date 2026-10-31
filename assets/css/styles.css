@@ -200,6 +200,40 @@ a { color: inherit; text-decoration: none; }
 .is-dark .h2, .is-dark .h3, .is-dark .display { color: var(--chalk-white); }
 .is-umber { background: var(--raw-umber); color: var(--chalk-white); }
 
+/* Light sections — the counterpart to .is-dark, on OBELUM 04, the clean page.
+   The components below were written when every section was dark and so had
+   their light-on-dark colours hardwired; these restate them for chalk white
+   rather than leaving each one to guess its own ground. Gold is deliberately
+   absent: it reads 2.5:1 on chalk white, so raw umber carries the accents
+   here and gold keeps to the dark grounds where it belongs. */
+.is-light { background: var(--page); color: var(--ink); }
+.is-light .h2, .is-light .h3, .is-light .display { color: var(--ink); }
+
+.is-light .statement__eyebrow { color: var(--raw-umber); }
+.is-light .statement__title   { color: var(--ink); }
+.is-light .statement__rule {
+  background: linear-gradient(to bottom, rgba(45, 48, 47, 0.62), rgba(45, 48, 47, 0.08));
+}
+
+/* Alpha here is measured, not picked: 0.62 left the unselected tabs at
+   3.9:1 on chalk white, under the 4.5 small text needs. */
+.is-light .cats__tab { color: rgba(45, 48, 47, 0.7); }
+.is-light .cats__tab:hover,
+.is-light .cats__tab[aria-selected="true"] { color: var(--ink); }
+
+.is-light .pill { color: var(--ink); border-color: rgba(45, 48, 47, 0.55); }
+.is-light .pill:hover {
+  background: var(--ink); border-color: var(--ink); color: var(--chalk-white);
+}
+
+.is-light .quote p    { color: var(--ink); }
+.is-light .quote cite { color: var(--raw-umber); }
+.is-light .quote small { color: var(--muted); }
+/* These are controls, not decoration, so the inactive ones have to stay
+   visible: 3:1 against the page. */
+.is-light .quotes__dots button { background: rgba(45, 48, 47, 0.55); }
+.is-light .quotes__dots button[aria-current="true"] { background: var(--raw-umber); }
+
 .section { padding-block: var(--section); }
 
 /* Scroll reveal */
@@ -597,12 +631,29 @@ body.nav-open { overflow: hidden; }
 }
 .tile::after {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(18,15,12,.92) 0%, rgba(18,15,12,.45) 26%, rgba(18,15,12,0) 58%);
+  /* Stops in px, not %. The text block is about the same height whatever the
+     tile is, so a percentage scrim over-covers a tall tile and leaves the
+     place name exposed on a short one — which on a 320px screen, over these
+     bright daylight photographs, put the name at 1.9:1. These hold the same
+     cover at every tile size. */
+  background: linear-gradient(to top,
+    rgba(18,15,12,.95) 0,
+    rgba(18,15,12,.88) 70px,
+    rgba(18,15,12,.6) 120px,
+    rgba(18,15,12,.2) 170px,
+    rgba(18,15,12,0) 215px);
   transition: background 420ms var(--ease);
 }
 .tile:hover img { transform: scale(1.06); }
 .tile:hover::after {
-  background: linear-gradient(to top, rgba(74,53,34,.94) 0%, rgba(45,48,47,.5) 34%, rgba(45,48,47,0) 66%);
+  /* Same px anchoring as the resting scrim, so hover never lightens the band
+     the text is sitting on. */
+  background: linear-gradient(to top,
+    rgba(74,53,34,.95) 0,
+    rgba(74,53,34,.88) 70px,
+    rgba(45,48,47,.6) 120px,
+    rgba(45,48,47,.2) 170px,
+    rgba(45,48,47,0) 215px);
 }
 
 .tile__body {
@@ -692,7 +743,10 @@ body.nav-open { overflow: hidden; }
    ========================================================================== */
 .world {
   position: relative;
-  min-height: clamp(32rem, 88svh, 52rem);
+  /* The full screen, as a title card should be. svh, not vh: on mobile vh is
+     the tall viewport, so the panel would sit taller than the visible area
+     and the button could land under the browser chrome. */
+  min-height: 100svh;
   display: flex; align-items: center; justify-content: center;
   padding-block: clamp(4rem, 10vh, 7rem);
   overflow: hidden; isolation: isolate;
@@ -931,6 +985,82 @@ body.nav-open { overflow: hidden; }
   transition: transform 900ms var(--ease), opacity 400ms var(--ease);
 }
 .feed__item:hover img { transform: scale(1.05); opacity: 0.86; }
+
+/* ---- Intent cards ----------------------------------------------------
+   The old single select hid four quite different journeys behind one closed
+   control. These are radios wearing the look of cards: the real input stays
+   in the accessibility tree and keeps arrow-key navigation, and only its
+   painted box is replaced. */
+.intents { border: 0; padding: 0; margin: 0 0 clamp(1.25rem, 2.5vw, 1.75rem); }
+.intents__legend {
+  padding: 0 0 0.9rem;
+  font: 400 0.6875rem/1 var(--mono);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(247, 245, 241, 0.62);
+}
+.intent { display: block; margin-bottom: 0.5rem; cursor: pointer; }
+.intent:last-child { margin-bottom: 0; }
+
+/* Not display:none — that would take the radio out of the tab order and stop
+   it answering the keyboard. It stays, with no painted size. */
+.intent__input {
+  position: absolute;
+  width: 1px; height: 1px;
+  opacity: 0;
+  margin: 0;
+}
+.intent__text {
+  display: block;
+  position: relative;
+  padding: 0.85rem 2.75rem 0.85rem 1.125rem;
+  border: 1px solid rgba(247, 245, 241, 0.26);
+  background: rgba(28, 30, 29, 0.28);
+  transition: border-color 280ms var(--ease), background 280ms var(--ease);
+}
+.intent__title {
+  display: block;
+  font: 400 0.9375rem/1.3 var(--sans);
+  color: var(--chalk-white);
+}
+.intent__sub {
+  display: block;
+  margin-top: 0.2rem;
+  font: 400 0.8125rem/1.35 var(--sans);
+  color: rgba(247, 245, 241, 0.66);
+}
+.intent:hover .intent__text { border-color: rgba(247, 245, 241, 0.5); }
+.intent__input:checked + .intent__text {
+  border-color: var(--gold);
+  background: rgba(179, 159, 116, 0.14);
+}
+/* The title stays chalk white when selected. Gold on the tinted card measured
+   3.9:1, under the 4.5 this size needs — and selection should not rest on
+   colour alone anyway, so a mark carries it instead. */
+.intent__input:checked + .intent__text::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 1.125rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: -0.5625rem;
+  border-radius: 50%;
+  background: var(--gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2 4.8 8.5 9.5 3.8' fill='none' stroke='%231C1E1D' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 0.75rem no-repeat;
+}
+/* The focus ring has to live on the box, since the input itself paints nothing. */
+.intent__input:focus-visible + .intent__text {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* The swapped copy, so a changed headline does not snap into place. */
+.intent-copy { animation: intent-in 420ms var(--ease) both; }
+@media (prefers-reduced-motion: reduce) { .intent-copy { animation: none; } }
+@keyframes intent-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
 
 /* ==========================================================================
    Signup — a quiet band between the feed and the footer

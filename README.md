@@ -98,6 +98,66 @@ nothing — which matters here, as every post carries copy hard against its top
 and bottom edges. Feeding it square or landscape images will crop them; change
 the ratio to suit whatever the live source returns.
 
+## Listing photography
+
+Eight listings, four photographs (`assets/img/listing-*.webp`, 1086x1448, the
+3:4 the tiles use). They are assigned by property type, not by address:
+
+| Photograph | Shows | Used for |
+|---|---|---|
+| `listing-villa-beach` | beach villa, pool, skyline across the water | Palm Jumeirah, JVC |
+| `listing-villa-golf` | villa terrace over a golf course at sunset | Emirates Hills, Dubai Hills Estate |
+| `listing-apartment-marina` | living room over the marina and its yachts | Dubai Marina, Business Bay |
+| `listing-apartment-creek` | living room at dusk, Downtown skyline across the water | Dubai Creek Harbour, Downtown Dubai |
+
+Villas show the building and its grounds, apartments the room and the view from
+it. The first four listings are each genuinely the property in their photograph;
+**the other four borrow the one matching their type and still need their own
+shot.** Replace them before this goes near real inventory — a Palm villa
+standing in for a JVC listing is fine as a layout placeholder and misleading as
+a property page.
+
+The tile scrim (`.tile::after`) is anchored in **px, not %**. The caption block
+is about the same height whatever the tile is, so a percentage gradient
+over-covers a tall tile and leaves the place name exposed on a short one. Over
+these bright daylight photographs that put the name at 1.9:1 on a 320px screen.
+If you change the caption's size, re-check the stops.
+
+## Light and dark sections
+
+The page alternates grounds so neither carries the whole homepage: dark hero,
+light listings, dark world panel, light testimonials, dark valuation, dark
+footer — roughly half and half.
+
+`.is-light` is the counterpart to `.is-dark` and puts a section on chalk white
+(OBELUM 04). Several components were written when every section was dark and
+had their light-on-dark colours hardwired, so `.is-light` restates them. **Gold
+is deliberately absent from light sections** — it measures 2.5:1 on chalk white.
+Raw umber carries the accents there; gold keeps to the dark grounds.
+
+## The brief form
+
+The valuation form's single "I want to" select became four radio cards. Picking
+one rewrites the whole panel: eyebrow, headline, body copy, submit label and the
+small print beneath it.
+
+Each intent's copy lives in the markup as a `[data-for]` block inside
+`[data-intent-copy]`; `main.js` only toggles `hidden`, so the copy stays
+editable in HTML and nothing is injected as a string. The submit label and note
+come from `data-submit` and `data-note` on each radio.
+
+They are radios rather than buttons so the group keeps arrow-key navigation and
+announces itself correctly. The painted box is the `<span>`; the input is still
+in the accessibility tree at 1px and opacity 0 — **not** `display: none`, which
+would drop it out of the tab order. Selection is shown by border, tint *and* a
+check mark, never colour alone; the selected title stays chalk white because
+gold on the tinted card measured 3.9:1.
+
+Like the signup, **no endpoint is connected.** It previously had `action="#"`,
+which reloaded the page and discarded whatever had been typed. `main.js` now
+intercepts and points people at `hello@obelum.ae`. Give the form an `action`
+and the handler stands down on its own.
+
 ## Newsletter signup
 
 The band between the feed and the footer has **no mailing list behind it.** The
