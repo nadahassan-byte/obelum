@@ -68,10 +68,16 @@ The hero is already marked `fetchpriority="high"`; everything below the fold is
 
 Note on caching: `vercel.json` gives `/assets/*` a 1-hour revalidating cache
 rather than the usual year-long `immutable` one. Filenames here are not
-content-hashed and the placeholders are meant to be overwritten in place, so an
-immutable cache would keep real photography from appearing. If you move to
-hashed filenames, raise it then. (`vercel.json` permits no comments, hence this
-note.)
+content-hashed and photographs are replaced in place, so a long cache keeps new
+imagery from appearing.
+
+`/assets/img/*` was on `max-age=3600` and that bit: swapping `hero.webp` left
+browsers showing the previous photograph for up to an hour, with no request to
+the server to notice. It now matches CSS and JS at `max-age=0,
+must-revalidate` — every image is revalidated, which costs a 304 when nothing
+changed and shows a new photograph immediately when it has. If you move to
+content-hashed filenames, raise it then. (`vercel.json` permits no comments,
+hence this note.)
 
 ## Instagram feed
 
