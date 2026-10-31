@@ -223,11 +223,19 @@
     const restart = () => {
       if (reduced) return;
       clearInterval(timer);
-      timer = setInterval(() => show(index + 1), 7000);
+      timer = setInterval(() => show(index + 1), 8000);
     };
+
+    const prev = $('[data-quote-prev]', quotesRoot);
+    const next = $('[data-quote-next]', quotesRoot);
+    if (prev) prev.addEventListener('click', () => { show(index - 1); restart(); });
+    if (next) next.addEventListener('click', () => { show(index + 1); restart(); });
 
     quotesRoot.addEventListener('mouseenter', () => clearInterval(timer));
     quotesRoot.addEventListener('mouseleave', restart);
+    // Someone reading with the keyboard should not have it move under them.
+    quotesRoot.addEventListener('focusin', () => clearInterval(timer));
+    quotesRoot.addEventListener('focusout', restart);
     document.addEventListener('visibilitychange', () => {
       document.hidden ? clearInterval(timer) : restart();
     });

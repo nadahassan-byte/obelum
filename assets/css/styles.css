@@ -976,33 +976,137 @@ body.nav-open { overflow: hidden; }
 /* ==========================================================================
    Testimonials
    ========================================================================== */
-.quotes { position: relative; }
-.quotes__track { display: grid; }
+/* Wider than the default shell, with the arrows sitting out at the edges. */
+.quotes-section { padding-block: clamp(4.5rem, 9vw, 8rem); }
+.quotes {
+  position: relative;
+  width: min(100% - 2 * var(--gutter), 86rem);
+  margin-inline: auto;
+  display: grid;
+  justify-items: center;
+}
+
+/* ---- Ornament: rule, quote mark, rule ---- */
+.quotes__ornament {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.4vw, 1.75rem);
+  margin-bottom: clamp(1.75rem, 4vw, 3rem);
+}
+.quotes__ornament-rule {
+  width: clamp(3rem, 9vw, 7rem);
+  height: 1px;
+  background: rgba(122, 89, 56, 0.42);
+}
+.quotes__ornament-mark {
+  font: 400 clamp(2.25rem, 1.6rem + 2.2vw, 3.5rem)/0.6 var(--serif);
+  color: var(--raw-umber);
+  /* The glyph hangs high in its box; nudge it onto the rules' line. */
+  transform: translateY(0.22em);
+}
+
+.quotes__track { display: grid; width: 100%; }
+/* From here up the arrows sit beside the quote rather than under it, so the
+   text is held clear of them — at 768 it ran straight under both. */
+@media (min-width: 48rem) {
+  .quotes__track { padding-inline: clamp(4.5rem, 8vw, 7rem); }
+}
 .quote {
   grid-area: 1 / 1;
-  display: grid; gap: 1.75rem;
-  max-width: 62rem; margin-inline: auto; text-align: center;
+  display: grid; gap: clamp(1.25rem, 2.6vw, 2rem);
+  max-width: 72rem; margin-inline: auto; text-align: center;
   opacity: 0; visibility: hidden;
-  transform: translateY(14px);
-  transition: opacity 560ms var(--ease), transform 560ms var(--ease), visibility 560ms;
+  transform: translateY(12px);
+  transition: opacity 240ms var(--ease), transform 240ms var(--ease), visibility 240ms;
 }
-.quote.is-active { opacity: 1; visibility: visible; transform: none; }
+/* The incoming quote waits for the outgoing one to clear. They share a grid
+   cell, so a straight crossfade renders both at half opacity on top of each
+   other and reads as a printing fault rather than a transition. */
+.quote.is-active {
+  opacity: 1; visibility: visible; transform: none;
+  transition-duration: 420ms;
+  transition-delay: 240ms;
+}
 .quote p {
   font-family: var(--serif); font-weight: 400;
-  font-size: clamp(1.15rem, 0.98rem + 0.95vw, 1.7rem);
-  line-height: 1.38;
+  font-size: clamp(1.25rem, 1rem + 1.15vw, 2rem);
+  line-height: 1.42;
+  color: var(--chalk-white);
+  /* The section is wide — the arrows sit at the edges of the page — but the
+     line is not. A quote reads better broken over three short lines than run
+     across the full width. */
+  max-width: 44rem;
+  margin: 0 auto;
+}
+.quote footer { display: grid; gap: 0.5rem; }
+.quote cite {
+  font-style: normal; font-family: var(--serif);
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.1875rem);
+  color: var(--gold);
+}
+.quote small { font: 400 0.6875rem/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase; color: var(--smoke); }
+
+/* ---- Arrows, out at the edges ---- */
+.quotes__arrow {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  /* 44px floor: the arrows are the main way through this on a phone. */
+  width: clamp(2.75rem, 3.4vw, 3.25rem);
+  aspect-ratio: 1;
+  /* 0.4 put the ring at 1.8:1 on chalk white — a hairline that barely read.
+     0.82 clears the 3:1 a control’s boundary wants, with the antialiasing
+     on a 1px curve allowed for. */
+  border: 1px solid rgba(122, 89, 56, 0.82);
+  border-radius: 50%;
+  color: var(--raw-umber);
+  background: none;
+  cursor: pointer;
+  transition: background 300ms var(--ease), color 300ms var(--ease), border-color 300ms var(--ease);
+}
+.quotes__arrow--prev { left: 0; }
+.quotes__arrow--next { right: 0; }
+.quotes__arrow:hover {
+  background: var(--raw-umber);
+  border-color: var(--raw-umber);
   color: var(--chalk-white);
 }
-.quote footer { display: grid; gap: 0.35rem; }
-.quote cite { font-style: normal; font-family: var(--serif); font-size: 1.1rem; color: var(--gold); }
-.quote small { font: 400 0.625rem/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase; color: var(--smoke); }
-.quotes__dots { display: flex; justify-content: center; gap: 0.625rem; padding-top: clamp(2rem, 4vw, 3rem); }
-.quotes__dots button {
-  width: 2.25rem; height: 2px;
-  background: rgba(215,208,199,.26);
-  transition: background 300ms var(--ease);
+/* No room beside the quote on a phone, so they come out of the flow's edges
+   and sit either side of the dots instead. */
+@media (max-width: 47.99rem) {
+  .quotes {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "orn   orn   orn"
+      "track track track"
+      "tail  tail  tail"
+      "prev  dots  next";
+  }
+  .quotes__ornament { grid-area: orn; }
+  .quotes__track    { grid-area: track; }
+  .quotes__tail     { grid-area: tail; justify-self: center; }
+  .quotes__dots     { grid-area: dots; }
+  .quotes__arrow    { position: static; translate: none; }
+  .quotes__arrow--prev { grid-area: prev; }
+  .quotes__arrow--next { grid-area: next; }
 }
-.quotes__dots button[aria-current="true"] { background: var(--gold); }
+
+.quotes__tail {
+  width: clamp(2.5rem, 5vw, 4rem);
+  height: 1px;
+  background: rgba(122, 89, 56, 0.42);
+  margin-top: clamp(1.75rem, 3.6vw, 2.75rem);
+}
+.quotes__dots { display: flex; justify-content: center; align-items: center; gap: 0.75rem; padding-top: clamp(1rem, 2vw, 1.5rem); }
+.quotes__dots button {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: rgba(45, 48, 47, 0.26);
+  padding: 0;
+  transition: background 300ms var(--ease), transform 300ms var(--ease);
+}
+.quotes__dots button[aria-current="true"] { background: var(--raw-umber); transform: scale(1.15); }
 
 /* ==========================================================================
    Valuation CTA
@@ -1413,11 +1517,15 @@ a, button, input, select, textarea, label {
   .btn { min-height: 48px; }
   .hero__btn { min-height: 48px; }
 
-  /* The rule stays 2px tall; the padding is the tappable part. */
-  .quotes__dots button {
-    height: 44px;
-    padding-block: 21px;
-    background-clip: content-box;
+  /* The dot stays 9px; an invisible overlay carries the touch target, so the
+     row of dots keeps its spacing instead of growing into a band of buttons. */
+  .quotes__dots button { position: relative; }
+  .quotes__dots button::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 44px; height: 44px;
+    transform: translate(-50%, -50%);
   }
-  .quotes__dots { gap: 0.25rem; }
+  .quotes__dots { gap: 1.25rem; }
 }

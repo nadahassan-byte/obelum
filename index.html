@@ -27,7 +27,7 @@
 <!-- Brand guidelines section 10: Gilda Display for headings, Montserrat for
      everything else. No italics, no script. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Montserrat:wght@300;400;500;600&display=swap">
-<link rel="stylesheet" href="assets/css/styles.css?v=14">
+<link rel="stylesheet" href="assets/css/styles.css?v=15">
 
 <script type="application/ld+json">
 {
@@ -276,22 +276,56 @@
 </section>
 
 <!-- ======================================================= Testimonials -->
-<section class="section is-light" aria-label="Client testimonials">
-  <div class="shell quotes" data-quotes>
+<section class="section is-light quotes-section" aria-label="Client testimonials">
+  <div class="quotes" data-quotes>
+    <!-- Ornament: a rule either side of an oversized quote mark. Decorative,
+         so it is hidden from assistive tech — the figures carry the meaning. -->
+    <div class="quotes__ornament" aria-hidden="true">
+      <span class="quotes__ornament-rule"></span>
+      <span class="quotes__ornament-mark">&ldquo;</span>
+      <span class="quotes__ornament-rule"></span>
+    </div>
+
+    <button class="quotes__arrow quotes__arrow--prev" type="button"
+            aria-label="Previous testimonial" data-quote-prev>
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M10 2.5 4.5 8l5.5 5.5" stroke="currentColor" stroke-width="1.3"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
     <div class="quotes__track">
       <figure class="quote is-active" data-quote>
-        <p>“They talked me out of the first two properties I wanted. The third one has done exactly what they said it would.”</p>
-        <footer><cite>H. Al Mansoori</cite><small>Investor · Dubai Marina</small></footer>
+        <p>&ldquo;They talked me out of the first two properties I wanted. The third one has done exactly what they said it would.&rdquo;</p>
+        <footer><cite>H. Al Mansoori</cite><small>Investor &middot; Dubai Marina</small></footer>
       </figure>
       <figure class="quote" data-quote>
-        <p>“I got a spreadsheet before I got a sales pitch. That had not happened to me in Dubai before.”</p>
-        <footer><cite>J. Okonkwo</cite><small>Seller · Dubai Hills Estate</small></footer>
+        <p>&ldquo;I got a spreadsheet before I got a sales pitch. That had not happened to me in Dubai before.&rdquo;</p>
+        <footer><cite>J. Okonkwo</cite><small>Seller &middot; Dubai Hills Estate</small></footer>
       </figure>
       <figure class="quote" data-quote>
-        <p>“The valuation was lower than two other agencies gave me. It was also the one the property sold at.”</p>
-        <footer><cite>M. Lindqvist</cite><small>Seller · Palm Jumeirah</small></footer>
+        <p>&ldquo;The valuation was lower than two other agencies gave me. It was also the one the property sold at.&rdquo;</p>
+        <footer><cite>M. Lindqvist</cite><small>Seller &middot; Palm Jumeirah</small></footer>
+      </figure>
+      <figure class="quote" data-quote>
+        <p>&ldquo;They told me to wait six months. I did, and the same apartment cost me less than it would have.&rdquo;</p>
+        <footer><cite>R. Haddad</cite><small>Buyer &middot; Downtown Dubai</small></footer>
+      </figure>
+      <figure class="quote" data-quote>
+        <p>&ldquo;Three viewings, not thirty. Someone had actually read the brief before picking up the phone.&rdquo;</p>
+        <footer><cite>S. Varma</cite><small>Tenant &middot; Dubai Creek Harbour</small></footer>
       </figure>
     </div>
+
+    <button class="quotes__arrow quotes__arrow--next" type="button"
+            aria-label="Next testimonial" data-quote-next>
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M6 2.5 11.5 8 6 13.5" stroke="currentColor" stroke-width="1.3"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <span class="quotes__tail" aria-hidden="true"></span>
     <div class="quotes__dots" role="tablist" aria-label="Testimonial navigation"></div>
   </div>
 </section>
@@ -550,6 +584,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=14" defer></script>
+<script src="assets/js/main.js?v=15" defer></script>
 </body>
 </html>

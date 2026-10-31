@@ -195,6 +195,25 @@ supporting line binds, not the mark**: lighten further and `.world__sub` fails
 at 390 and 320 while the wordmark still has room. If you want it lighter
 again, the lever is that line — larger type drops its threshold from 4.5 to 3.
 
+## Testimonials
+
+Five quotes, one at a time, on a wide band with the arrows out at the page
+edges. The ornament, the tail rule and the dots are all decorative; the
+`<figure>` elements carry the meaning.
+
+**The quotes share a grid cell, so they must not crossfade.** A straight
+crossfade paints both at half opacity on top of each other and reads as a
+printing fault rather than a transition. The outgoing one fades in 240ms with
+no delay, the incoming waits 240ms before starting — keep that delay at or
+above the outgoing duration if you change either.
+
+The section is wide but `.quote p` is capped at 44rem: a quote reads better
+over three short lines than run across the full width. `.quotes__track` is
+padded from 48rem up so the text clears the arrows, which at 768 it did not.
+
+Auto-advance stops on hover *and* on focus — otherwise the panel moves out from
+under anyone reading it with the keyboard.
+
 ## Light and dark sections
 
 The page alternates grounds so neither carries the whole homepage: dark hero,
