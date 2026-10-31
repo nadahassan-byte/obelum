@@ -224,12 +224,11 @@ are the way through.
 ## Light and dark sections
 
 The page alternates grounds so neither carries the whole homepage: dark hero,
-light listings, dark world panel, light testimonials, light feed, dark brief,
+light listings, dark world panel, light testimonials, dark feed, dark brief,
 dark footer — 52% dark, 48% light as it stands.
 
 `grounds.js` in the scratchpad measures that split if you want to check after a
-change; the feed moving to chalk white and the brief section growing to 88svh
-happened in the same pass and cancelled out.
+change.
 
 `.is-light` is the counterpart to `.is-dark` and puts a section on chalk white
 (OBELUM 04). Several components were written when every section was dark and
@@ -252,8 +251,11 @@ Dropping the section's padding for the split is also why `scroll-margin-top`
 now exists on the anchor targets: section padding used to absorb the pinned
 bar, and without it "Sell" landed the headline 2px underneath on a phone.
 
-At 64rem and up the section stands at `88svh`, so the photograph is a view
-rather than a strip. **`.cta` has to be a grid for that to work** — as a plain
+At 64rem and up the section stands at `100svh` and `#valuation` overrides the
+shared `scroll-margin-top` back to `0`, so landing on it fills the screen with
+no band of the section above showing along the top edge. Below that breakpoint
+it stacks, and the copy's own top padding clears the pinned bar instead of a
+scroll offset — an offset there would put the previous section back in view. **`.cta` has to be a grid for that to work** — as a plain
 block the inner row took its height from its content and the extra just left a
 gap under the glass panel.
 
