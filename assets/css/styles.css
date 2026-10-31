@@ -1193,11 +1193,13 @@ body.nav-open { overflow: hidden; }
    decides — placed above, the margin below simply won and left the panel 72px
    short of the edge. */
 @media (min-width: 64rem) {
-  /* The whole screen, so no neighbouring band shows at either edge. svh, not
-     vh: on mobile vh is the tall viewport, which would push the submit button
-     under the browser chrome. min-height, so a short window still lets the
-     form grow past it rather than clipping. */
-  .cta { min-height: 100svh; }
+  /* Taller than the screen on purpose. At exactly 100svh there is only one
+     scroll position where nothing else shows — a pixel either side and the
+     chalk-white band above creeps in. The extra 12% is the window in which
+     this fills the viewport completely. svh, not vh: on mobile vh is the tall
+     viewport and would push the submit button under the browser chrome.
+     min-height, so a short window still lets the form grow rather than clip. */
+  .cta { min-height: 112svh; }
   .cta__inner { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
   /* The panel is its own ground rather than a card floating on the picture,
      so the seam between photograph and form is a straight edge. */

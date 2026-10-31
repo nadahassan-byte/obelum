@@ -251,9 +251,13 @@ Dropping the section's padding for the split is also why `scroll-margin-top`
 now exists on the anchor targets: section padding used to absorb the pinned
 bar, and without it "Sell" landed the headline 2px underneath on a phone.
 
-At 64rem and up the section stands at `100svh` and `#valuation` overrides the
-shared `scroll-margin-top` back to `0`, so landing on it fills the screen with
-no band of the section above showing along the top edge. Below that breakpoint
+At 64rem and up the section stands at **`112svh` — taller than the screen on
+purpose.** At exactly `100svh` there is only one scroll position where nothing
+else shows; a pixel either side and the chalk-white testimonials band creeps in
+along the top. The extra 12% is the window in which this fills the viewport
+completely, measured at 140–180px of scroll depending on screen height.
+`#valuation` also overrides the shared `scroll-margin-top` back to `0`, so
+landing on it from the nav puts it flush rather than 80px down. Below that breakpoint
 it stacks, and the copy's own top padding clears the pinned bar instead of a
 scroll offset — an offset there would put the previous section back in view. **`.cta` has to be a grid for that to work** — as a plain
 block the inner row took its height from its content and the extra just left a
