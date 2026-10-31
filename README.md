@@ -248,9 +248,10 @@ Dropping the section's padding for the split is also why `scroll-margin-top`
 now exists on the anchor targets: section padding used to absorb the pinned
 bar, and without it "Sell" landed the headline 2px underneath on a phone.
 
-**The left photograph is the hero's, reused.** This section wants its own; the
-scrim is weighted for a dark one, so a bright daylight shot will need
-re-measuring.
+The form panel is glass — translucent over the photograph, which runs under the
+whole section rather than stopping at the seam. `brief.webp` is its own
+photograph. It is a bright sunset, so the scrim and the panel's opacity are
+tuned against it; swapping it means re-measuring both.
 
 ## The brief form
 
@@ -263,8 +264,25 @@ Each intent's copy lives in the markup as a `[data-for]` block inside
 editable in HTML and nothing is injected as a string. The submit label and note
 come from `data-submit` and `data-note` on each radio.
 
+The four live inside a disclosure rather than being always on show: a button
+carrying the current choice, which opens a panel of the options. Not a
+`<select>` — a native option cannot carry a second line, and each of these
+explains itself. The panel is absolutely positioned so opening it does not
+shunt the fields below down the form.
+
 They are radios rather than buttons so the group keeps arrow-key navigation and
-announces itself correctly. The painted box is the `<span>`; the input is still
+announces itself correctly. **Browsing and committing are separate**, and that
+distinction is load-bearing:
+
+- Arrowing through a radio group fires `change` at every step, so closing the
+  panel there meant the first ArrowDown picked an option and shut the panel —
+  a keyboard user could never reach the third or fourth.
+- Selecting a radio by keyboard *also* fires a `click`, so closing on click
+  reintroduced the same fault. A real pointer click carries `detail >= 1`; the
+  synthetic one is `0`, which is how the two are told apart.
+
+So arrow keys browse (updating the panel copy live), and click, Enter or Space
+commit and close. The painted box is the `<span>`; the input is still
 in the accessibility tree at 1px and opacity 0 — **not** `display: none`, which
 would drop it out of the tab order. Selection is shown by border, tint *and* a
 check mark, never colour alone; the selected title stays chalk white because

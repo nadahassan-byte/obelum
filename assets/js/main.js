@@ -284,12 +284,73 @@
       if (note)   note.textContent   = (picked && picked.dataset.note)   || defaultNote;
     };
 
+    /* --- The intent disclosure ------------------------------------------- */
+    const field   = $('[data-intent-field]', brief);
+    const toggle  = $('[data-intent-toggle]', brief);
+    const options = $('[data-intent-options]', brief);
+    const valueEl = $('[data-intent-value]', brief);
+    const placeholder = valueEl ? valueEl.textContent.trim() : 'Select one';
+
+    const openList = (open) => {
+      if (!toggle || !options) return;
+      options.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      if (open) {
+        const target = $('.intent__input:checked', options) || $('.intent__input', options);
+        if (target) target.focus();
+      }
+    };
+    if (toggle) {
+      toggle.addEventListener('click', () => openList(options.hidden));
+      // Escape closes and hands focus back, rather than stranding it in a
+      // panel that is no longer on screen.
+      field.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape' || options.hidden) return;
+        openList(false);
+        toggle.focus();
+      });
+      document.addEventListener('click', (e) => {
+        if (!options.hidden && !field.contains(e.target)) openList(false);
+      });
+    }
+
+    const commit = () => { openList(false); if (toggle) toggle.focus(); };
+
+    // Changing and committing are separate. Arrowing through a radio group
+    // fires change on every step, so closing there meant the first ArrowDown
+    // picked an option and shut the panel — a keyboard user could never reach
+    // the third or fourth. Arrow keys now browse; click, Enter or Space commit.
     $$('.intent__input', brief).forEach(r => {
-      r.addEventListener('change', () => r.checked && show(r.value));
+      r.addEventListener('change', () => {
+        if (!r.checked) return;
+        show(r.value);
+        const title = $('.intent__title', r.parentElement);
+        if (valueEl && title) valueEl.textContent = title.textContent.trim();
+      });
     });
+    if (options) {
+      options.addEventListener('click', (e) => {
+        // Selecting a radio with an arrow key also fires a click, which would
+        // close the panel again. A real pointer click carries detail >= 1; the
+        // keyboard's synthetic one is 0.
+        if (e.detail === 0) return;
+        if (e.target.closest('.intent')) commit();
+      });
+      options.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();          // this one would otherwise submit the form
+        commit();
+      });
+      // Space checks the radio natively; commit once it has.
+      options.addEventListener('keyup', (e) => { if (e.key === ' ') commit(); });
+    }
     // A back/forward restore can hand us a radio already checked.
     const preset = $('.intent__input:checked', brief);
-    if (preset) show(preset.value);
+    if (preset) {
+      show(preset.value);
+      const t = $('.intent__title', preset.parentElement);
+      if (valueEl && t) valueEl.textContent = t.textContent.trim();
+    }
 
     // No endpoint behind this either. Say so rather than reloading the page
     // and dropping whatever they typed, which is what action="#" did.
@@ -301,9 +362,8 @@
         if (brief.getAttribute('action')) return;
         if ($('.intent__input:checked', brief)) return;
         e.preventDefault();
-        if (note) note.textContent = 'Pick one of the four above so we know who should reply.';
-        const first = $('.intent__input', brief);
-        if (first) first.focus();
+        if (note) note.textContent = 'Pick one of the four so we know who should reply.';
+        openList(true);
       });
     }
 
