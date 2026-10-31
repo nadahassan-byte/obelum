@@ -103,20 +103,20 @@ a { color: inherit; text-decoration: none; }
   font-weight: 300;
   line-height: 1.06;
   letter-spacing: -0.012em;
-  font-size: clamp(2.35rem, 1.3rem + 4.6vw, 5.25rem);
+  font-size: clamp(1.85rem, 1.15rem + 2.9vw, 3.5rem);
 }
 .h2 {
   font-family: var(--serif);
   font-weight: 300;
   line-height: 1.1;
   letter-spacing: -0.008em;
-  font-size: clamp(1.95rem, 1.2rem + 2.9vw, 3.6rem);
+  font-size: clamp(1.6rem, 1.1rem + 1.9vw, 2.6rem);
 }
 .h3 {
   font-family: var(--serif);
   font-weight: 400;
   line-height: 1.2;
-  font-size: clamp(1.3rem, 1.1rem + 0.9vw, 1.9rem);
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
 }
 /* Rule 04: emphasis in colour, never italic or bold. */
 .amp, .italic { color: var(--raw-umber); }
@@ -347,7 +347,19 @@ body.nav-open { overflow: hidden; }
   isolation: isolate;
   padding: clamp(6rem, 12vh, 9rem) var(--gutter) clamp(6.5rem, 13vh, 9rem);
 }
-.hero__media { position: absolute; inset: 0; z-index: -2; }
+/* Taller than the hero on both edges, so the scene can slide without ever
+   showing a gap. The scroll motion rides on this container; the slide inside
+   keeps its own push-in animation, and transforming the two separately stops
+   them overwriting each other. .hero's overflow:hidden crops the surplus. */
+.hero__media {
+  position: absolute;
+  top: -12%; right: 0; bottom: -12%; left: 0;
+  z-index: -2;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__media { top: 0; bottom: 0; transform: none !important; }
+}
 .hero__media video { width: 100%; height: 100%; object-fit: cover; }
 
 /* Slides stack and crossfade; only the active one drifts, so each entrance
@@ -441,10 +453,10 @@ body.nav-open { overflow: hidden; }
   /* Much larger than it was: in this composition the statement is the frame,
      not a caption over it. Sentence case and Gilda stay — section 10 allows
      one Gilda statement per surface and does not set it uppercase. */
-  font-size: clamp(2.5rem, 1.2rem + 5.2vw, 5.5rem);
+  font-size: clamp(1.9rem, 1.15rem + 2.9vw, 3.6rem);
   color: var(--chalk-white);
   text-shadow: 0 2px 30px rgba(11, 36, 48, 0.42);
-  max-width: 15ch;   /* breaks to three lines, as the reference does */
+  max-width: 18ch;   /* three lines at the smaller size */
 }
 .hero__sub {
   font-size: clamp(0.875rem, 0.83rem + 0.26vw, 1.0625rem);
@@ -693,7 +705,7 @@ body.nav-open { overflow: hidden; }
   text-transform: none;
   letter-spacing: 0;
   line-height: 1.16;
-  font-size: clamp(1.5rem, 1.05rem + 1.9vw, 2.65rem);
+  font-size: clamp(1.3rem, 1rem + 1.25vw, 2.05rem);
   color: var(--chalk-white);
   max-width: 20ch;
 }
@@ -795,7 +807,7 @@ body.nav-open { overflow: hidden; }
 .tile__place {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(1.15rem, 0.95rem + 0.85vw, 1.75rem);
+  font-size: clamp(1.05rem, 0.92rem + 0.55vw, 1.4rem);
   line-height: 1.15;
 }
 .tile__spec {
@@ -912,13 +924,13 @@ body.nav-open { overflow: hidden; }
 .world__pre {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(1.15rem, 0.95rem + 0.85vw, 1.9rem);
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.4rem);
   line-height: 1.2;
   color: var(--chalk-white);
 }
 /* The lockup is artwork, never retyped type. */
 .world__mark {
-  width: min(42rem, 72vw);
+  width: min(30rem, 58vw);
   height: auto;
   margin-top: clamp(0.5rem, 1.4vh, 1rem);
 }
@@ -977,7 +989,7 @@ body.nav-open { overflow: hidden; }
 .quote.is-active { opacity: 1; visibility: visible; transform: none; }
 .quote p {
   font-family: var(--serif); font-weight: 400;
-  font-size: clamp(1.3rem, 1rem + 1.4vw, 2.15rem);
+  font-size: clamp(1.15rem, 0.98rem + 0.95vw, 1.7rem);
   line-height: 1.38;
   color: var(--chalk-white);
 }
@@ -1051,7 +1063,7 @@ body.nav-open { overflow: hidden; }
   font-weight: 300;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  font-size: clamp(1.05rem, 0.78rem + 1.2vw, 2rem);
+  font-size: clamp(0.95rem, 0.8rem + 0.8vw, 1.5rem);
   line-height: 1.25;
   color: var(--chalk-white);
   text-align: center;
@@ -1214,7 +1226,7 @@ body.nav-open { overflow: hidden; }
   .signup__inner { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
 }
 .signup__title {
-  font: 400 clamp(1.5rem, 1.1rem + 1.6vw, 2.375rem)/1.24 var(--serif);
+  font: 400 clamp(1.3rem, 1.05rem + 1.1vw, 1.85rem)/1.3 var(--serif);
   color: var(--chalk-white);
   /* ch units do not know how narrow the screen is: 24ch of Gilda ran past a
      320px viewport on its own. */

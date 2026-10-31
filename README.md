@@ -120,11 +120,33 @@ The statement stays **Gilda, sentence case**. Section 10 allows one Gilda
 statement per surface and does not set it uppercase, so the reference's
 condensed uppercase treatment is reached through scale and alignment instead.
 
+The scene parallaxes as you scroll. `.hero__media` is `[data-parallax="0.12"]`
+and is translated by that fraction of how far the hero has climbed past the top
+of the viewport, so the photograph lags the content over it. **The motion is on
+the container, not the image** — the slide inside runs its own push-in
+animation, and transforming one element twice would have them overwrite each
+other. The container is inset `-12%` top and bottom to cover the distance it
+travels; change the depth and that overhang has to change with it, or a gap
+opens at an edge. The handler is rAF-throttled and the whole effect is off
+under `prefers-reduced-motion`.
+
 `.hero__scrim::after` is **weighted to the left**, following the text. The old
 centred radial was built for centred text and left the headline at 2.6:1 once
 it moved to the edge. Below 64rem the text runs nearly edge to edge, so the
 weighting flattens out. **If the hero photograph changes, re-measure** — the
 scrim is tuned against the image, not in the abstract.
+
+## Type scale
+
+The display sizes are deliberately restrained — the hero statement tops out at
+58px, not 88px. Large type reads as shouting; at this scale the photography
+carries the frame and the words are quiet over it. Body and UI text were left
+alone: they are already small, and shrinking them costs legibility rather than
+buying restraint.
+
+**Changing a display size can change its contrast requirement.** WCAG drops the
+bar from 4.5:1 to 3:1 at 24px, so a heading that shrinks past that boundary
+suddenly needs more contrast, not less. Re-measure after any change here.
 
 ## Listing photography
 

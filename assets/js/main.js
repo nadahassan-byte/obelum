@@ -38,6 +38,36 @@
     onScroll();
   }
 
+  /* --- Parallax: the scene lags the page as you scroll past it ----------- */
+  // Each [data-parallax] element is translated by a fraction of how far its
+  // own section has travelled up the viewport, so the photograph drifts
+  // slower than the content over it. The value is that fraction; the element
+  // needs enough overhang (see .hero__media) to cover the distance it moves.
+  const parallax = $$('[data-parallax]');
+  if (parallax.length && !reduced) {
+    let queued = false;
+    const place = () => {
+      queued = false;
+      for (const el of parallax) {
+        const host = el.parentElement;
+        const r = host.getBoundingClientRect();
+        // Off-screen sections cost nothing and keep whatever offset they had.
+        if (r.bottom < 0 || r.top > window.innerHeight) continue;
+        const depth = parseFloat(el.dataset.parallax) || 0.12;
+        // How far the section has climbed past the top of the viewport,
+        // clamped so the offset settles once the section has fully gone.
+        const climbed = Math.min(Math.max(-r.top, 0), r.height);
+        el.style.transform = 'translate3d(0,' + (climbed * depth).toFixed(1) + 'px,0)';
+      }
+    };
+    // rAF-throttled: scroll fires far faster than the screen refreshes, and
+    // reading a rect in the handler itself would force layout every event.
+    const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(place); } };
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    place();
+  }
+
   /* --- Hero slideshow + motion toggle ------------------------------------- */
   const mediaToggle = $('[data-media-toggle]');
   const world = $('.world');
