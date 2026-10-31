@@ -211,8 +211,15 @@ The section is wide but `.quote p` is capped at 44rem: a quote reads better
 over three short lines than run across the full width. `.quotes__track` is
 padded from 48rem up so the text clears the arrows, which at 768 it did not.
 
-Auto-advance stops on hover *and* on focus — otherwise the panel moves out from
-under anyone reading it with the keyboard.
+**Auto-advance pauses on the controls only, not the section.** Hover-pause used
+to sit on the whole band, which is 92% of the viewport wide and 378px tall — so
+resting the pointer anywhere near it stopped the rotation for good, and it only
+ever moved when someone pressed an arrow. It also pauses on focus, so the panel
+does not move out from under anyone reading it with the keyboard, and an
+IntersectionObserver keeps it still while the section is off screen.
+
+Under `prefers-reduced-motion` it does not rotate at all; the arrows and dots
+are the way through.
 
 ## Light and dark sections
 
@@ -225,6 +232,25 @@ footer — roughly half and half.
 had their light-on-dark colours hardwired, so `.is-light` restates them. **Gold
 is deliberately absent from light sections** — it measures 2.5:1 on chalk white.
 Raw umber carries the accents there; gold keeps to the dark grounds.
+
+## The brief section
+
+A hard split from 64rem: the photograph holds the left of the frame with the
+invitation over it, the form sits on a solid `--ink-deep` panel down the right,
+both edge to edge. Below that it stacks and the panel goes back to being a card
+on the photograph, since there is no second column for it to be the ground of.
+
+**The desktop override has to come after the base `.valuation` rule.** Both are
+a single class, so source order decides — placed above, the stacked rule's
+margin won and left the panel 72px short of the right edge.
+
+Dropping the section's padding for the split is also why `scroll-margin-top`
+now exists on the anchor targets: section padding used to absorb the pinned
+bar, and without it "Sell" landed the headline 2px underneath on a phone.
+
+**The left photograph is the hero's, reused.** This section wants its own; the
+scrim is weighted for a dark one, so a bright daylight shot will need
+re-measuring.
 
 ## The brief form
 

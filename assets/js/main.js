@@ -203,6 +203,7 @@
     const dots = $('.quotes__dots', quotesRoot);
     let index = 0;
     let timer = null;
+    let inView = true;
 
     const show = (next) => {
       index = (next + quotes.length) % quotes.length;
@@ -221,9 +222,9 @@
     });
 
     const restart = () => {
-      if (reduced) return;
       clearInterval(timer);
-      timer = setInterval(() => show(index + 1), 8000);
+      if (reduced || !inView) return;
+      timer = setInterval(() => show(index + 1), 7000);
     };
 
     const prev = $('[data-quote-prev]', quotesRoot);
@@ -231,14 +232,29 @@
     if (prev) prev.addEventListener('click', () => { show(index - 1); restart(); });
     if (next) next.addEventListener('click', () => { show(index + 1); restart(); });
 
-    quotesRoot.addEventListener('mouseenter', () => clearInterval(timer));
-    quotesRoot.addEventListener('mouseleave', restart);
+    // Hover-pause is scoped to the controls. It used to sit on the whole
+    // section, which is 92% of the viewport wide and 378px tall — resting the
+    // pointer anywhere in that band stopped the rotation for good, so it only
+    // ever moved when someone pressed an arrow.
+    [prev, next, dots].forEach((el) => {
+      if (!el) return;
+      el.addEventListener('mouseenter', () => clearInterval(timer));
+      el.addEventListener('mouseleave', restart);
+    });
     // Someone reading with the keyboard should not have it move under them.
     quotesRoot.addEventListener('focusin', () => clearInterval(timer));
     quotesRoot.addEventListener('focusout', restart);
     document.addEventListener('visibilitychange', () => {
       document.hidden ? clearInterval(timer) : restart();
     });
+    // No point rotating a section nobody is looking at — and it means the set
+    // starts from wherever it was when you arrive, not mid-cycle.
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => {
+        inView = e.isIntersecting;
+        inView ? restart() : clearInterval(timer);
+      }, { threshold: 0.25 }).observe(quotesRoot);
+    }
     restart();
   }
 
