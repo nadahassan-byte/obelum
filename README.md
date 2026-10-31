@@ -148,13 +148,24 @@ If you change the caption's size, re-check the stops.
 ## The world panel
 
 Has its own photograph (`world.webp`) rather than borrowing the hero's. The
-lockup there is `obelum-wordmark.png` — OBELUM without the PROPERTIES line,
-cropped from the full logo — because the lead line above it already says what
-this is. The header and footer still carry the full lockup.
+lockup there is `obelum-wordmark-white.png` — OBELUM without the PROPERTIES
+line, in chalk white — because the lead line above already says what this is.
+The header and footer still carry the full gold lockup.
 
-Its scrim runs heavier than the hero's: the yacht photograph's sunlit water
-left the gold at 2.6:1 under the old weighting. Gold never sits on a light
-ground, so if this photograph changes, re-measure the lockup before shipping.
+Both wordmarks are cropped from `obelum-logo.png` and keep its exact shapes:
+`obelum-wordmark.png` is the gold one, `-white` the same alpha filled with
+OBELUM 04.
+
+**The white mark is what lets the photograph show.** Gold needed a near-opaque
+scrim to clear its threshold — 2.6:1 over the yacht's sunlit water otherwise —
+and that buried the image. Chalk white does not, so the scrim runs at roughly
+half the weight and the yacht reads.
+
+Five strengths were swept against all four elements at 1440/1024/768/390/320.
+The one in place is the lightest that passes, at 5.4:1 worst case. **The
+supporting line binds, not the mark**: lighten further and `.world__sub` fails
+at 390 and 320 while the wordmark still has room. If you want it lighter
+again, the lever is that line — larger type drops its threshold from 4.5 to 3.
 
 ## Light and dark sections
 
