@@ -1172,10 +1172,21 @@ body.nav-open { overflow: hidden; }
 @media (max-width: 63.99rem) {
   .cta__copy { padding-top: clamp(5.75rem, 14vw, 8rem); }
 }
-.cta .eyebrow { color: rgba(247,245,241,.78); }
+/* The eyebrow sat flush against the headline — 0px between them at every
+   width — and the gap below the headline was a flat 20px whether the type was
+   26px or 42px. Both scale with the type now. */
+.cta .eyebrow {
+  color: rgba(247,245,241,.78);
+  margin-bottom: clamp(0.7rem, 1.3vw, 1.15rem);
+}
 .cta .h2 { color: var(--chalk-white); }
 .cta .h2 .italic { color: var(--timberwolf); }
-.cta p { color: rgba(247,245,241,.82); max-width: 46ch; margin-top: 1.25rem; }
+.cta p {
+  color: rgba(247,245,241,.82);
+  max-width: 46ch;
+  margin-top: clamp(1.1rem, 2vw, 1.85rem);
+  margin-bottom: 0;
+}
 
 /* Below the split it stacks, and the panel goes back to being a card on the
    photograph — there is no second column for it to be the ground of. */
