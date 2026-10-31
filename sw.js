@@ -4,7 +4,7 @@
    two after each deploy, which has already broken this site twice. Everything
    is network-first; the cache exists solely so an offline visit still renders.
    Bump CACHE to retire old stores. */
-const CACHE = 'obelum-v8';
+const CACHE = 'obelum-v11';
 
 self.addEventListener('install', (e) => {
   // Take over immediately rather than waiting for every old tab to close.

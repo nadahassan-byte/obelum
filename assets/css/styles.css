@@ -387,18 +387,49 @@ body.nav-open { overflow: hidden; }
 }
 /* A soft centre pool keeps the statement legible over the bright skyline
    without flattening the image around it. */
+/* The statement moved to the left edge, so the cover follows it. The old
+   centred radial was weighted for centred text and left the headline at
+   2.6:1 over the sunlit stone and water on this photograph. */
 .hero__scrim::after {
   content: "";
   position: absolute; inset: 0;
-  background: radial-gradient(56% 38% at 50% 46%, rgba(20,19,17,.56), rgba(20,19,17,0) 72%);
+  background:
+    radial-gradient(56% 38% at 50% 46%, rgba(20,19,17,.30), rgba(20,19,17,0) 72%),
+    linear-gradient(to right,
+      rgba(20,19,17,.72) 0%,
+      rgba(20,19,17,.58) 34%,
+      rgba(20,19,17,.22) 58%,
+      rgba(20,19,17,0) 78%);
+}
+/* Narrow screens carry the text nearly edge to edge, so the weighting has
+   nowhere to fall away to. */
+@media (max-width: 63.99rem) {
+  .hero__scrim::after {
+    background:
+      linear-gradient(to right,
+        rgba(20,19,17,.70) 0%,
+        rgba(20,19,17,.62) 55%,
+        rgba(20,19,17,.44) 100%);
+  }
 }
 
+/* Left-aligned, with the statement carrying the frame. The supporting line,
+   the scroll cue and the featured residence sit in .hero__foot below. */
 .hero__stage {
   display: grid;
-  justify-items: center;
+  justify-items: start;
   gap: clamp(0.75rem, 1.8vh, 1.25rem);
-  text-align: center;
+  text-align: left;
   width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+}
+.hero__eyebrow {
+  font: 400 clamp(0.625rem, 0.6rem + 0.1vw, 0.6875rem)/1 var(--mono);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(247, 245, 241, 0.72);
+  margin-bottom: clamp(0.5rem, 1.6vh, 1.25rem);
 }
 .hero__title {
   /* Rule 04: one Gilda statement per surface, sentence case. */
@@ -407,25 +438,121 @@ body.nav-open { overflow: hidden; }
   text-transform: none;
   letter-spacing: 0;
   line-height: 1.14;
-  font-size: clamp(1.6rem, 0.95rem + 2.2vw, 2.9rem);
+  /* Much larger than it was: in this composition the statement is the frame,
+     not a caption over it. Sentence case and Gilda stay — section 10 allows
+     one Gilda statement per surface and does not set it uppercase. */
+  font-size: clamp(2.5rem, 1.2rem + 5.2vw, 5.5rem);
   color: var(--chalk-white);
   text-shadow: 0 2px 30px rgba(11, 36, 48, 0.42);
-  max-width: 34ch;   /* wide enough to hold the statement on one line at desktop */
+  max-width: 15ch;   /* breaks to three lines, as the reference does */
 }
 .hero__sub {
   font-size: clamp(0.875rem, 0.83rem + 0.26vw, 1.0625rem);
   font-weight: 300;
   color: rgba(247, 245, 241, 0.92);
   text-shadow: 0 1px 20px rgba(11, 36, 48, 0.42);
-  /* Uncapped, so the line sits whole on one row from tablet up. Below that it
-     must wrap: forcing nowrap ran it 190px past a 390px screen, where the
-     hero's own overflow:hidden silently cut the end off. */
-  max-width: none;
+  /* It wraps to two lines down here, as the reference does — the old nowrap
+     belonged to the centred layout and would now run into the scroll cue. */
+  max-width: 34ch;
+  margin: 0;
 }
 
-@media (min-width: 48rem) {
-  .hero__sub { white-space: nowrap; }
+/* ---- Hero foot: supporting line, scroll cue, featured residence ---- */
+/* In normal flow by default — stacked under the statement. Taking it out of
+   flow at every width let it slide up over the statement on a phone, where
+   the hero is tall and narrow and the two met in the middle. */
+.hero__foot {
+  z-index: 2;
+  display: grid;
+  gap: clamp(1.25rem, 3vh, 2rem);
+  width: 100%;
+  max-width: var(--maxw);
+  margin: clamp(2rem, 5vh, 3rem) auto 0;
+  align-items: end;
 }
+@media (min-width: 64rem) {
+  /* Only here, where the hero is wide enough for the three to sit in a row
+     with the statement above them, does it pin to the foot — clear of the
+     nav along the very bottom. */
+  .hero__foot {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: clamp(5rem, 11vh, 7.5rem);
+    margin: 0 auto;
+    padding-inline: var(--gutter);
+    max-width: calc(var(--maxw) + 2 * var(--gutter));
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+  }
+  .hero__foot .hero__scroll { justify-self: center; }
+  .hero__foot .featured { justify-self: end; }
+}
+
+.hero__scroll {
+  display: inline-grid;
+  justify-items: center;
+  gap: 0.75rem;
+  font: 400 0.625rem/1 var(--mono);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(247, 245, 241, 0.82);
+  transition: color 280ms var(--ease);
+}
+.hero__scroll:hover { color: var(--chalk-white); }
+/* After the base rule, not before it: same specificity, so source order
+   decides, and placed earlier the display:inline-grid simply won. */
+@media (max-width: 63.99rem) {
+  .hero__scroll { display: none; }
+}
+.hero__scroll-rule {
+  width: 1px;
+  height: clamp(2rem, 5vh, 3.25rem);
+  background: linear-gradient(to bottom, rgba(247,245,241,.85), rgba(247,245,241,.08));
+}
+
+/* ---- Featured residence ---- */
+.featured {
+  width: min(22rem, 100%);
+  padding: clamp(1rem, 2vw, 1.35rem) clamp(1.1rem, 2.2vw, 1.5rem);
+  background: rgba(20, 19, 17, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(247, 245, 241, 0.16);
+}
+.featured__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 0.75rem;
+  font: 400 0.625rem/1 var(--mono);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(247, 245, 241, 0.7);
+}
+.featured__name {
+  margin: 0;
+  font: 400 clamp(1.125rem, 1rem + 0.5vw, 1.375rem)/1.2 var(--serif);
+  color: var(--chalk-white);
+}
+.featured__place {
+  margin: 0.25rem 0 0;
+  font: 400 0.8125rem/1.4 var(--sans);
+  color: rgba(247, 245, 241, 0.72);
+}
+.featured__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: clamp(0.85rem, 1.8vh, 1.15rem);
+  padding-top: clamp(0.75rem, 1.6vh, 1rem);
+  border-top: 1px solid rgba(247, 245, 241, 0.16);
+  font: 400 0.75rem/1 var(--sans);
+  letter-spacing: 0.1em;
+  color: rgba(247, 245, 241, 0.88);
+  transition: color 280ms var(--ease);
+}
+.featured__link:hover { color: var(--gold); }
 
 /* Outlined pill with a caret. */
 .hero__cta {
@@ -766,12 +893,15 @@ body.nav-open { overflow: hidden; }
   .world__media img { animation: none; transform: none; }
 }
 
-/* Weighted so the lockup sits on a dark ground: gold is never on a light one. */
+/* Weighted so the lockup sits on a dark ground: gold is never on a light one.
+   Carried heavier than it used to be for the yacht photograph, whose sunlit
+   water left the gold at 2.6:1 under the old weighting. Measured at 1440,
+   1024, 768, 390 and 320: worst case 5.35:1. */
 .world__scrim {
   position: absolute; inset: 0; z-index: -1;
   background:
-    radial-gradient(70% 58% at 50% 48%, rgba(20,19,17,.80), rgba(20,19,17,.42) 70%, rgba(20,19,17,.58) 100%),
-    linear-gradient(to bottom, rgba(20,19,17,.55) 0%, rgba(20,19,17,.25) 35%, rgba(20,19,17,.70) 100%);
+    radial-gradient(80% 68% at 50% 46%, rgba(20,19,17,.95), rgba(20,19,17,.72) 65%, rgba(20,19,17,.76) 100%),
+    linear-gradient(to bottom, rgba(20,19,17,.6) 0%, rgba(20,19,17,.38) 35%, rgba(20,19,17,.74) 100%);
 }
 
 .world__inner { display: grid; justify-items: center; gap: 0; }

@@ -98,6 +98,28 @@ nothing — which matters here, as every post carries copy hard against its top
 and bottom edges. Feeding it square or landscape images will crop them; change
 the ratio to suit whatever the live source returns.
 
+## The hero
+
+Left-aligned composition: eyebrow, then the statement carrying the frame, with
+the supporting line, a scroll cue and the featured-residence card along the
+foot above the nav row.
+
+`.hero__foot` is **in normal flow by default and only absolute from 64rem**.
+Taking it out of flow at every width let it ride up over the statement on a
+phone, where the hero is tall and narrow and the two met in the middle. The
+scroll cue is a desktop affordance and is hidden below 64rem — that rule has to
+sit *after* the base `.hero__scroll` rule, since they have equal specificity.
+
+The statement stays **Gilda, sentence case**. Section 10 allows one Gilda
+statement per surface and does not set it uppercase, so the reference's
+condensed uppercase treatment is reached through scale and alignment instead.
+
+`.hero__scrim::after` is **weighted to the left**, following the text. The old
+centred radial was built for centred text and left the headline at 2.6:1 once
+it moved to the edge. Below 64rem the text runs nearly edge to edge, so the
+weighting flattens out. **If the hero photograph changes, re-measure** — the
+scrim is tuned against the image, not in the abstract.
+
 ## Listing photography
 
 Eight listings, four photographs (`assets/img/listing-*.webp`, 1086x1448, the
@@ -122,6 +144,17 @@ is about the same height whatever the tile is, so a percentage gradient
 over-covers a tall tile and leaves the place name exposed on a short one. Over
 these bright daylight photographs that put the name at 1.9:1 on a 320px screen.
 If you change the caption's size, re-check the stops.
+
+## The world panel
+
+Has its own photograph (`world.webp`) rather than borrowing the hero's. The
+lockup there is `obelum-wordmark.png` — OBELUM without the PROPERTIES line,
+cropped from the full logo — because the lead line above it already says what
+this is. The header and footer still carry the full lockup.
+
+Its scrim runs heavier than the hero's: the yacht photograph's sunlit water
+left the gold at 2.6:1 under the old weighting. Gold never sits on a light
+ground, so if this photograph changes, re-measure the lockup before shipping.
 
 ## Light and dark sections
 
