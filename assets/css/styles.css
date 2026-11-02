@@ -482,6 +482,22 @@ body.nav-open { overflow: hidden; }
 }
 
 /* ---- Hero foot: supporting line, scroll cue, featured residence ---- */
+/* Stacked, the statement takes the free height and the foot sits at the
+   bottom of it. Centring the statement and letting the foot follow pooled all
+   the slack into one gap between the button and the supporting line — 42px on
+   a small Android but 163px on a Pro Max, which reads as a hole rather than
+   composition. Two rows spread it above and below the statement instead. */
+@media (max-width: 63.99rem) {
+  .hero { grid-template-rows: 1fr auto; }
+  /* Statement to the bottom of its row, so the slack collects above it rather
+     than splitting either side and leaving a hole over the supporting line. */
+  .hero__stage { align-self: end; }
+  .hero__foot  { align-self: end; }
+  /* The hero reserves bottom padding for the nav row, and the nav is hidden at
+     this width — that was dead space under the card. */
+  .hero { padding-bottom: clamp(2rem, 5vh, 3.5rem); }
+}
+
 /* In normal flow by default — stacked under the statement. Taking it out of
    flow at every width let it slide up over the statement on a phone, where
    the hero is tall and narrow and the two met in the middle. */
@@ -1641,8 +1657,8 @@ a, button, input, select, textarea, label {
      underline, the handle's border. Padding would reach 44px but drag that
      rule away from the word it belongs to, so the hit area is an invisible
      overlay centred on the element and the text stays where it is. */
-  .cats__tab, .feed__handle { position: relative; }
-  .cats__tab::before, .feed__handle::before {
+  .cats__tab, .feed__handle, .featured__link { position: relative; }
+  .cats__tab::before, .feed__handle::before, .featured__link::before {
     content: "";
     position: absolute;
     left: 0; right: 0; top: 50%;

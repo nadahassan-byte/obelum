@@ -104,6 +104,26 @@ nothing — which matters here, as every post carries copy hard against its top
 and bottom edges. Feeding it square or landscape images will crop them; change
 the ratio to suit whatever the live source returns.
 
+## Mobile
+
+Checked at 320, 360, 375, 390, 430, 768 and landscape, with touch emulation:
+no horizontal overflow anywhere, every tap target reachable, no field under
+16px (which is what makes iOS zoom the page on focus), and every section's
+text at or above its contrast threshold.
+
+**Tap targets are often larger than the element.** `.cats__tab`,
+`.feed__handle`, `.featured__link` and the testimonial dots all carry an
+invisible 44px overlay (`::before` on coarse pointers) so the text keeps its
+size and the rule under it stays put. A script that measures bounding boxes
+will report all of them as too small — `probe.js` in the scratchpad hit-tests
+the 44px band instead, which is what actually matters.
+
+Stacked, the hero uses `grid-template-rows: 1fr auto` with the statement and
+the foot both `align-self: end`, so the free height collects above the
+statement rather than pooling into one gap between the button and the
+supporting line. It also drops the bottom padding that is reserved for the nav
+row, since the nav is hidden at this width.
+
 ## The hero
 
 Left-aligned composition: eyebrow, then the statement carrying the frame, with
