@@ -290,12 +290,12 @@ a { color: inherit; text-decoration: none; }
 .wordmark { display: inline-flex; align-items: center; max-width: 13rem; }
 .wordmark__img {
   display: block;
-  height: clamp(1.75rem, 1.5rem + 0.85vw, 2.25rem);
+  height: clamp(2.15rem, 1.8rem + 1.05vw, 2.8rem);
   width: auto;
   transition: height 420ms var(--ease), opacity 300ms var(--ease);
 }
 .wordmark:hover .wordmark__img { opacity: 0.86; }
-.site-header.is-stuck .wordmark__img { height: clamp(1.5rem, 1.3rem + 0.7vw, 1.85rem); }
+.site-header.is-stuck .wordmark__img { height: clamp(1.85rem, 1.6rem + 0.85vw, 2.3rem); }
 
 .burger {
   position: absolute;
@@ -648,8 +648,11 @@ body.nav-open { overflow: hidden; }
    1024px the right group came within 17px of the logo, so tighten the tracking
    and the gaps until the bar widens enough to carry them. */
 @media (min-width: 64rem) and (max-width: 74.99rem) {
-  .hero-nav.is-stuck .hero-nav__group { gap: 1.35rem; }
-  .hero-nav.is-stuck .hero-nav__link { letter-spacing: 0.085em; }
+  .hero-nav.is-stuck .hero-nav__group { gap: 1.2rem; }
+  .hero-nav.is-stuck .hero-nav__link { letter-spacing: 0.07em; }
+  /* The larger wordmark takes room the nav needs here — "Join us" left the
+     right group 32px off it. Trimmed back only in this band. */
+  .site-header.is-stuck .wordmark__img { height: 1.7rem; }
 }
 .hero-nav__link {
   font: 400 0.8125rem/1 var(--sans);
