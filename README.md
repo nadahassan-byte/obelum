@@ -323,18 +323,39 @@ would drop it out of the tab order. Selection is shown by border, tint *and* a
 check mark, never colour alone; the selected title stays chalk white because
 gold on the tinted card measured 3.9:1.
 
-Like the signup, **no endpoint is connected.** It previously had `action="#"`,
-which reloaded the page and discarded whatever had been typed. `main.js` now
-intercepts and points people at `hello@obelum.ae`. Give the form an `action`
-and the handler stands down on its own.
+Both this and the newsletter post to **FormSubmit**, which forwards to the
+Gmail address in the form's `action`. No account, no server, no API key.
+
+**One manual step on first use:** FormSubmit emails that address a confirmation
+link the first time a form submits. Until someone clicks it, nothing is
+delivered.
+
+**The address sits in public HTML.** FormSubmit issues a random alias after the
+first send — swap it into both `action` attributes and the inbox stops being
+scrapeable. Nothing else needs changing: `main.js` derives the AJAX endpoint
+from whatever the action is.
+
+Each form carries `_subject` so the two are filterable in Gmail, `_template`
+for a readable table, and a `_honey` honeypot (`.trap` — off-screen, not
+`display: none`, which some bots skip).
+
+**Never render the response body.** `postForm()` checks the status and the
+content type and throws a plain error otherwise. A mail endpoint that is down,
+rate-limited or behind a bot challenge answers with an HTML page, and printing
+that raw is how `<!DOCTYPE html>` ends up on screen in front of a client —
+exactly what the previous Obelum site was doing. Tested against four
+responses: success, a Cloudflare challenge page, a JSON rejection and a 500.
+
+Both forms work **without JavaScript**: a plain `method="post"` to the same
+action, and a `<noscript>` block that drops the dropdown's collapse so the four
+intent options stand as an ordinary radio list. Done in CSS rather than by
+un-setting `hidden` in script, so there is no flash of an open panel on load.
 
 ## Newsletter signup
 
-The band between the feed and the footer has **no mailing list behind it.** The
-`<form>` has no `action`, and `main.js` intercepts the submit to point people
-at `hello@obelum.ae` instead of silently dropping the address. When a provider
-is chosen, give the form its `action` (the handler stands down on its own once
-`action` is set) and delete the `[data-signup]` block in `main.js`.
+The band between the feed and the footer posts to the same FormSubmit address
+as the brief form, under a different `_subject`. See "The brief form" above for
+the confirmation step and the alias swap.
 
 The heading links to `instagram.com/obelum.properties`; correct that handle if
 it differs.
