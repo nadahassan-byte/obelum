@@ -258,6 +258,38 @@
     restart();
   }
 
+  /* --- Posting a form to FormSubmit -------------------------------------- */
+  // The /ajax/ endpoint answers with JSON and keeps the visitor on the page.
+  // Everything here is written around one rule: never render the response
+  // body. When a mail endpoint is down, rate-limited or behind a bot
+  // challenge it answers with an HTML page, and printing that raw is how
+  // markup ends up on screen in front of a client.
+  const postForm = async (form) => {
+    const url = form.action.replace('://formsubmit.co/', '://formsubmit.co/ajax/');
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: new FormData(form),
+    });
+    const type = res.headers.get('content-type') || '';
+    if (!res.ok || !type.includes('application/json')) {
+      throw new Error('unexpected response');      // deliberately not the body
+    }
+    const data = await res.json().catch(() => null);
+    if (!data || String(data.success) !== 'true') throw new Error('rejected');
+  };
+
+  const sending = (button, busy, label) => {
+    if (!button) return;
+    button.disabled = busy;
+    if (busy) {
+      button.dataset.idle = button.textContent;
+      button.textContent = 'Sending\u2026';
+    } else {
+      button.textContent = label || button.dataset.idle || button.textContent;
+    }
+  };
+
   /* --- Brief form: the panel follows the chosen intent ------------------- */
   const brief = $('[data-brief]');
   if (brief) {
@@ -352,14 +384,11 @@
       if (valueEl && t) valueEl.textContent = t.textContent.trim();
     }
 
-    // No endpoint behind this either. Say so rather than reloading the page
-    // and dropping whatever they typed, which is what action="#" did.
     // On the button's click, not the form's submit: submit only fires once the
     // browser's own required-field checks pass, so asking for an intent there
     // made people fill in four fields before being told to pick one first.
     if (submit) {
       submit.addEventListener('click', (e) => {
-        if (brief.getAttribute('action')) return;
         if ($('.intent__input:checked', brief)) return;
         e.preventDefault();
         if (note) note.textContent = 'Pick one of the four so we know who should reply.';
@@ -367,38 +396,57 @@
       });
     }
 
-    brief.addEventListener('submit', (e) => {
-      if (brief.getAttribute('action')) return;
+    brief.addEventListener('submit', async (e) => {
+      if (!$('.intent__input:checked', brief)) { e.preventDefault(); return; }
       e.preventDefault();
-      if (!$('.intent__input:checked', brief)) return;
-      if (note) {
-        note.innerHTML = 'Thanks \u2014 nothing is connected behind this form yet. ' +
-          'Email <a href="mailto:hello@obelum.ae?subject=Brief">hello@obelum.ae</a> ' +
-          'and an advisor will pick it up.';
+      sending(submit, true);
+      try {
+        await postForm(brief);
+        brief.reset();
+        show('default');                       // back to the opening copy
+        if (valueEl) valueEl.textContent = placeholder;
+        sending(submit, false, defaultSubmit);
+        // Last, not first: show() rewrites the note with the default line, so
+        // a thank-you set before it is overwritten the moment it appears.
+        if (note) note.textContent =
+          'Thank you \u2014 your brief is with us. An advisor will reply within 24 hours.';
+      } catch (err) {
+        if (note) {
+          note.innerHTML = 'That did not send. Please try again, or email ' +
+            '<a href="mailto:hello@obelum.ae?subject=Brief">hello@obelum.ae</a> directly.';
+        }
+        sending(submit, false);
       }
     });
   }
 
   /* --- Signup ------------------------------------------------------------- */
-  // There is no mailing list behind this yet. Rather than drop the address on
-  // the floor or claim a subscription that did not happen, send people to an
-  // inbox that exists. Remove this block once the form has a real action.
   const signup = $('[data-signup]');
   if (signup) {
     const note = $('[data-signup-note]', signup);
-    signup.addEventListener('submit', (e) => {
-      if (signup.getAttribute('action')) return;   // a provider is wired in
+    const go   = $('.signup__go', signup);
+    signup.addEventListener('submit', async (e) => {
       e.preventDefault();
+      // novalidate on the form, so the check is ours to make.
       const email = $('#signup-email', signup);
       if (!email.value.trim() || !email.checkValidity()) {
         if (note) note.textContent = 'Please enter a valid email address.';
         email.focus();
         return;
       }
-      if (note) {
-        note.innerHTML = 'Our list is not open yet \u2014 email ' +
-          '<a href="mailto:hello@obelum.ae?subject=Newsletter">hello@obelum.ae</a> ' +
-          'and we will add you.';
+      if (go) go.disabled = true;
+      if (note) note.textContent = 'Adding you\u2026';
+      try {
+        await postForm(signup);
+        if (note) note.textContent = 'You are on the list. Look out for the first one.';
+        signup.reset();
+      } catch (err) {
+        if (note) {
+          note.innerHTML = 'That did not send. Please try again, or email ' +
+            '<a href="mailto:hello@obelum.ae?subject=Newsletter">hello@obelum.ae</a> directly.';
+        }
+      } finally {
+        if (go) go.disabled = false;
       }
     });
   }

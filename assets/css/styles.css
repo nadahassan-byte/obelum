@@ -204,6 +204,19 @@ a { color: inherit; text-decoration: none; }
    along the top edge, and nothing here needs clearing the bar. */
 #valuation { scroll-margin-top: 0; }
 
+/* Honeypot. Off-screen rather than display:none — some bots skip fields that
+   are not rendered at all, and this one needs to look fillable. */
+.trap {
+  position: absolute !important;
+  left: -9999px;
+  /* 16px so it never trips an iOS-zoom audit. It cannot be focused anyway —
+     off-screen, tabindex -1, pointer-events none — so this is housekeeping. */
+  font-size: 16px;
+  width: 1px; height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Dark sections */
 .is-dark {
   background: var(--ink);

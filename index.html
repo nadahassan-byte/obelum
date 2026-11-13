@@ -27,7 +27,7 @@
 <!-- Brand guidelines section 10: Gilda Display for headings, Montserrat for
      everything else. No italics, no script. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Montserrat:wght@300;400;500;600&display=swap">
-<link rel="stylesheet" href="assets/css/styles.css?v=24">
+<link rel="stylesheet" href="assets/css/styles.css?v=25">
 
 <script type="application/ld+json">
 {
@@ -389,7 +389,19 @@
       </div>
     </div>
 
-    <form class="valuation" id="contact" method="post" data-brief>
+    <!-- Posts to FormSubmit, which forwards to the inbox in the action. The
+         plain action is the no-JS path: without the script the browser POSTs
+         natively and FormSubmit shows its own confirmation. With the script,
+         main.js posts to the /ajax/ variant instead and keeps you on the page.
+         To stop the address sitting in public HTML, swap it for the random
+         alias FormSubmit issues after the first send — see the README. -->
+    <form class="valuation" id="contact" method="post"
+          action="https://formsubmit.co/oobelumgroup@gmail.com" data-brief>
+      <input type="hidden" name="_subject" value="Obelum — new brief from the site">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <!-- Honeypot: real people never fill this, bots usually do. -->
+      <input class="trap" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
       <!-- Radios, not a select: the options carry a line of explanation each, and
            a radio group gives arrow-key navigation and the right announcement
            for free. -->
@@ -399,7 +411,20 @@
         <!-- A disclosure around the same four radios, not a <select>: a native
              option cannot carry a second line, and these each explain
              themselves. The radios stay the source of truth, so the group
-             keeps its arrow-key navigation and the form still posts `intent`. -->
+             keeps its arrow-key navigation and the form still posts `intent`.
+
+             Without JavaScript the toggle does nothing, which would leave the
+             options permanently shut and the intent impossible to choose. The
+             <noscript> block below drops the collapse entirely: the toggle
+             goes, and the four options stand as a plain radio list. Done in
+             CSS rather than by un-setting `hidden` in script, so there is no
+             flash of an open panel before main.js runs. -->
+        <noscript>
+          <style>
+            .intents__toggle { display: none; }
+            .intents__options[hidden] { display: block; position: static; box-shadow: none; }
+          </style>
+        </noscript>
         <div class="intents__field" data-intent-field>
           <button class="intents__toggle" type="button"
                   aria-expanded="false" aria-controls="intent-options" data-intent-toggle>
@@ -533,7 +558,12 @@
     <h2 class="signup__title" id="signup-h">
       The latest in Dubai property, <span class="italic">lifestyle &amp; culture</span>, curated just for you.
     </h2>
-    <form class="signup__form" data-signup novalidate>
+    <form class="signup__form" method="post"
+          action="https://formsubmit.co/oobelumgroup@gmail.com" data-signup novalidate>
+      <input type="hidden" name="_subject" value="Obelum — newsletter signup">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input class="trap" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
       <label class="signup__label" for="signup-email">Enter your email</label>
       <div class="signup__control">
         <input class="signup__input" id="signup-email" name="email" type="email"
@@ -605,6 +635,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=24" defer></script>
+<script src="assets/js/main.js?v=25" defer></script>
 </body>
 </html>
