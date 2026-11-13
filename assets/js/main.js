@@ -460,8 +460,40 @@
     return data;
   };
 
+  // The plain-HTML route to FormSubmit, used when the background send fails
+  // (blocked request, no usable reply, form not yet activated). The browser
+  // posts a real form, FormSubmit records it — or shows its activation page —
+  // and then sends the visitor back here with ?sent=<kind>, which shows the
+  // same thank-you. Returns false only if it could not even start.
+  const postDirect = (fields, subject, form, kind) => {
+    try {
+      const back = new URL(location.href);
+      back.search = ''; back.hash = kind === 'brief' ? 'valuation' : '';
+      back.searchParams.set('sent', kind);
+      const hp = form && $('input[name="_honey"]', form);
+      const all = Object.assign({}, fields, {
+        _subject: subject, _template: 'table', _captcha: 'false',
+        _next: back.href, _honey: hp ? hp.value : '',
+      });
+      const f = document.createElement('form');
+      f.method = 'POST';
+      f.action = 'https://formsubmit.co/' + INBOX;
+      f.hidden = true;
+      Object.keys(all).forEach((k) => {
+        const i = document.createElement('input');
+        i.type = 'hidden'; i.name = k; i.value = all[k];
+        f.appendChild(i);
+      });
+      document.body.appendChild(f);
+      f.submit();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
   // Runs a send with the button disabled and the outcome in the note.
-  const submitWith = async (form, button, note, fields, subject, thanks) => {
+  const submitWith = async (form, button, note, fields, subject, thanks, kind) => {
     const label = button ? button.textContent : '';
     if (button) { button.disabled = true; button.textContent = 'Sending\u2026'; }
     try {
@@ -476,7 +508,11 @@
       // Activation…") so a problem can be diagnosed from the page itself.
       const reason = err && err.message && err.message !== 'Send failed' && err.message !== 'Failed to fetch'
         ? ' (' + String(err.message).replace(/[<>&]/g, '') + ')' : '';
-      if (window.console) console.warn('Form send failed:', err);
+      if (window.console) console.warn('Form send failed, posting directly instead:', err);
+      if (kind && postDirect(fields, subject, form, kind)) {
+        if (note) note.textContent = 'Sending…';
+        return false;                       // the page is navigating away
+      }
       if (note) {
         note.innerHTML = 'Sorry, that did not send' + reason + '. Please try again, or email ' +
           fallback(subject) + ' directly.';
@@ -515,6 +551,16 @@
       $('.thanks__close', thanksDialog).focus();
     }
   };
+
+  // Back from a direct post (see postDirect): thank them, then tidy the URL
+  // so a reload or a shared link does not show it again.
+  const sentKind = new URLSearchParams(location.search).get('sent');
+  if (sentKind) {
+    history.replaceState(null, '', location.pathname + location.hash);
+    if (sentKind === 'contact' || sentKind === 'brief') {
+      addEventListener('load', () => showThanks());
+    }
+  }
 
   /* --- Brief form: the panel follows the chosen intent ------------------- */
   const brief = $('[data-brief]');
@@ -646,7 +692,7 @@
         phone: readPhone(brief.elements.phone).e164,
         community: v('community'),
       }, `Website brief: ${intent} \u2014 ${v('name')}`,
-      'Thank you \u2014 your brief has been sent. An advisor will come back to you within 24 hours.')
+      'Thank you \u2014 your brief has been sent. An advisor will come back to you within 24 hours.', 'brief')
         .then((ok) => {
           if (!ok) return;
           // The reset cleared the radios; put the panel back to its opening state.
@@ -684,7 +730,7 @@
         about: v('topic'),
         message: contact.elements.message.value.trim(),
       }, 'Website enquiry: ' + subject,
-      'Thank you \u2014 your message has been sent. We will reply within one working day.')
+      'Thank you \u2014 your message has been sent. We will reply within one working day.', 'contact')
         .then((ok) => { if (ok) showThanks(); });
     });
   }
@@ -696,6 +742,7 @@
   const signup = $('[data-signup]');
   if (signup) {
     const note = $('[data-signup-note]', signup);
+    if (sentKind === 'signup' && note) note.textContent = 'Thank you \u2014 you are on the list.';
     signup.addEventListener('submit', (e) => {
       if (signup.getAttribute('action')) return;   // a provider is wired in
       e.preventDefault();
@@ -708,7 +755,7 @@
       }
       submitWith(signup, $('button[type="submit"]', signup), note,
         { email: email.value.trim() }, 'Website newsletter sign-up',
-        'Thank you \u2014 you are on the list.');
+        'Thank you \u2014 you are on the list.', 'signup');
     });
   }
 
