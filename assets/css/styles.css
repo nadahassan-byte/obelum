@@ -295,6 +295,10 @@ a { color: inherit; text-decoration: none; }
   transition: height 420ms var(--ease), opacity 300ms var(--ease);
 }
 .wordmark:hover .wordmark__img { opacity: 0.86; }
+/* The masthead logo over the hero, about 40% larger than the base size. The
+   pinned bar keeps its own smaller heights below, so the nav still fits. */
+.site-header .wordmark { max-width: 15rem; }
+.site-header .wordmark__img { height: clamp(3rem, 2.5rem + 1.4vw, 3.9rem); }
 .site-header.is-stuck .wordmark__img { height: clamp(1.85rem, 1.6rem + 0.85vw, 2.3rem); }
 
 .burger {
