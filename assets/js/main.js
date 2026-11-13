@@ -433,63 +433,33 @@
   };
 
   /* --- Sending forms by email ---------------------------------------------- */
-  // Every form on the site posts to FormSubmit, which emails each submission
-  // to the inbox below. No account: the very first submission makes FormSubmit
-  // send that inbox an "Activate form" link, and nothing is delivered until it
-  // is clicked. To change the inbox, change INBOX (and activate again).
+  // Every form posts to /api/send, a function on this same site (api/send.js),
+  // which passes it on to FormSubmit from Vercel's servers and so to INBOX.
+  // The browser never contacts formsubmit.co itself: visitors' networks could
+  // not reach it. FormSubmit still needs its one-time "Activate Form" link
+  // clicking in INBOX. To change the inbox, change it in api/send.js too.
   const INBOX = 'oobelumgroup@gmail.com';
-  const ENDPOINT = 'https://formsubmit.co/ajax/' + INBOX;
+  const ENDPOINT = '/api/send';
   const fallback = (subject) =>
     `<a href="mailto:${INBOX}?subject=${encodeURIComponent(subject)}">${INBOX}</a>`;
 
-  // Resolves with FormSubmit's reply, or rejects with a message to show.
-  const sendForm = async (fields, subject, form) => {
+  // Resolves with the reply, or rejects with a message to show.
+  const sendForm = async (fields, subject, form, kind) => {
     const hp = form && $('input[name="_honey"]', form);
     const res = await fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(Object.assign({}, fields, {
+        _form: kind,
         _subject: subject,
-        _template: 'table',
-        _captcha: 'false',
-        _honey: hp ? hp.value : '',          // filled only by bots: FormSubmit drops it
+        _honey: hp ? hp.value : '',          // filled only by bots
       })),
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok || String(data.success) !== 'true') throw new Error(data.message || 'Send failed');
-    return data;
-  };
-
-  // The plain-HTML route to FormSubmit, used when the background send fails
-  // (blocked request, no usable reply, form not yet activated). The browser
-  // posts a real form, FormSubmit records it — or shows its activation page —
-  // and then sends the visitor back here with ?sent=<kind>, which shows the
-  // same thank-you. Returns false only if it could not even start.
-  const postDirect = (fields, subject, form, kind) => {
-    try {
-      const back = new URL(location.href);
-      back.search = ''; back.hash = kind === 'brief' ? 'valuation' : '';
-      back.searchParams.set('sent', kind);
-      const hp = form && $('input[name="_honey"]', form);
-      const all = Object.assign({}, fields, {
-        _subject: subject, _template: 'table', _captcha: 'false',
-        _next: back.href, _honey: hp ? hp.value : '',
-      });
-      const f = document.createElement('form');
-      f.method = 'POST';
-      f.action = 'https://formsubmit.co/' + INBOX;
-      f.hidden = true;
-      Object.keys(all).forEach((k) => {
-        const i = document.createElement('input');
-        i.type = 'hidden'; i.name = k; i.value = all[k];
-        f.appendChild(i);
-      });
-      document.body.appendChild(f);
-      f.submit();
-      return true;
-    } catch (e) {
-      return false;
+    if (!res.ok || String(data.success) !== 'true') {
+      throw new Error(data.message || ('status ' + res.status));
     }
+    return data;
   };
 
   // Runs a send with the button disabled and the outcome in the note.
@@ -497,22 +467,18 @@
     const label = button ? button.textContent : '';
     if (button) { button.disabled = true; button.textContent = 'Sending\u2026'; }
     try {
-      await sendForm(fields, subject, form);
+      await sendForm(fields, subject, form, kind);
       form.reset();
       // Put the country-code labels back in step with the reset selects.
       $$('[data-country-code]', form).forEach((sel) => sel.dispatchEvent(new Event('change')));
       if (note) note.textContent = thanks;
       return true;
     } catch (err) {
-      // Keep FormSubmit's own reason visible (e.g. "This form needs
-      // Activation…") so a problem can be diagnosed from the page itself.
-      const reason = err && err.message && err.message !== 'Send failed' && err.message !== 'Failed to fetch'
+      // Keep the reason visible (e.g. "This form needs Activation…") so a
+      // problem can be diagnosed from the page itself.
+      const reason = err && err.message && err.message !== 'Failed to fetch'
         ? ' (' + String(err.message).replace(/[<>&]/g, '') + ')' : '';
-      if (window.console) console.warn('Form send failed, posting directly instead:', err);
-      if (kind && postDirect(fields, subject, form, kind)) {
-        if (note) note.textContent = 'Sending…';
-        return false;                       // the page is navigating away
-      }
+      if (window.console) console.warn('Form send failed:', err);
       if (note) {
         note.innerHTML = 'Sorry, that did not send' + reason + '. Please try again, or email ' +
           fallback(subject) + ' directly.';
@@ -552,15 +518,6 @@
     }
   };
 
-  // Back from a direct post (see postDirect): thank them, then tidy the URL
-  // so a reload or a shared link does not show it again.
-  const sentKind = new URLSearchParams(location.search).get('sent');
-  if (sentKind) {
-    history.replaceState(null, '', location.pathname + location.hash);
-    if (sentKind === 'contact' || sentKind === 'brief') {
-      addEventListener('load', () => showThanks());
-    }
-  }
 
   /* --- Brief form: the panel follows the chosen intent ------------------- */
   const brief = $('[data-brief]');
@@ -742,7 +699,6 @@
   const signup = $('[data-signup]');
   if (signup) {
     const note = $('[data-signup-note]', signup);
-    if (sentKind === 'signup' && note) note.textContent = 'Thank you \u2014 you are on the list.';
     signup.addEventListener('submit', (e) => {
       if (signup.getAttribute('action')) return;   // a provider is wired in
       e.preventDefault();
