@@ -476,8 +476,15 @@
     } catch (err) {
       // Keep the reason visible (e.g. "This form needs Activation…") so a
       // problem can be diagnosed from the page itself.
-      const reason = err && err.message && err.message !== 'Failed to fetch'
-        ? ' (' + String(err.message).replace(/[<>&]/g, '') + ')' : '';
+      // /api/send only ever returns our own short sentences now. This is the
+      // line that printed a Cloudflare page into the form, so it keeps its own
+      // guard: anything that smells of markup is dropped rather than trimmed.
+      // Stripping the angle brackets and shortening it was not enough — the
+      // remains still read as "!DOCTYPE htmlhtml lang=..." on screen.
+      const raw = err && err.message && err.message !== 'Failed to fetch' ? String(err.message) : '';
+      const looksLikeMarkup = /[<>]|DOCTYPE|http-equiv|<!--|^\s*\{/i.test(raw);
+      const safe = looksLikeMarkup ? '' : raw.replace(/\s+/g, ' ').trim().slice(0, 120);
+      const reason = safe ? ' (' + safe + ')' : '';
       if (window.console) console.warn('Form send failed:', err);
       if (note) {
         note.innerHTML = 'Sorry, that did not send' + reason + '. Please try again, or email ' +
