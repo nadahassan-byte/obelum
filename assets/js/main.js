@@ -472,8 +472,13 @@
       if (note) note.textContent = thanks;
       return true;
     } catch (err) {
+      // Keep FormSubmit's own reason visible (e.g. "This form needs
+      // Activation…") so a problem can be diagnosed from the page itself.
+      const reason = err && err.message && err.message !== 'Send failed' && err.message !== 'Failed to fetch'
+        ? ' (' + String(err.message).replace(/[<>&]/g, '') + ')' : '';
+      if (window.console) console.warn('Form send failed:', err);
       if (note) {
-        note.innerHTML = 'Sorry, that did not send. Please try again, or email ' +
+        note.innerHTML = 'Sorry, that did not send' + reason + '. Please try again, or email ' +
           fallback(subject) + ' directly.';
       }
       return false;
