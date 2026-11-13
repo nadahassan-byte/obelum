@@ -299,10 +299,6 @@ a { color: inherit; text-decoration: none; }
    pinned bar keeps its own smaller heights below, so the nav still fits. */
 .site-header .wordmark { max-width: 15rem; }
 .site-header .wordmark__img { height: clamp(3rem, 2.5rem + 1.4vw, 3.9rem); }
-/* Over the hero the logo sits three inches (288px) lower. A transform, so the
-   header and burger keep their layout; the pinned bar resets it. */
-.site-header .wordmark { transform: translateY(18rem); transition: transform 420ms var(--ease); }
-.site-header.is-stuck .wordmark { transform: none; }
 .site-header.is-stuck .wordmark__img { height: clamp(1.85rem, 1.6rem + 0.85vw, 2.3rem); }
 
 .burger {
