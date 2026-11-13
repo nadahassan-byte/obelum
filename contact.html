@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Montserrat:wght@300;400;500;600&display=swap">
-<link rel="stylesheet" href="assets/css/styles.css?v=26">
+<link rel="stylesheet" href="assets/css/styles.css?v=27">
 </head>
 
 <body class="page-contact">
@@ -86,8 +86,8 @@
 
 <!-- ============================================================ Contact -->
 <!-- Same photograph-and-glass-panel layout as the homepage brief, so the two
-     read as one site. The form has no backend: main.js turns it into an email
-     to hello@obelum.ae. Give the <form> an action to post it somewhere real. -->
+     read as one site. main.js emails each message to the site inbox through
+     FormSubmit (see "Sending forms by email" there). -->
 <section class="cta contact" aria-labelledby="contact-h">
   <div class="cta__bg"><img src="assets/img/brief.webp" alt="" width="1672" height="941" fetchpriority="high"></div>
   <div class="cta__inner">
@@ -120,6 +120,7 @@
     </div>
 
     <form class="valuation contact__form" method="post" data-contact novalidate>
+      <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="valuation__row">
         <div class="field">
           <label for="c-name">Name</label>
@@ -162,7 +163,7 @@
 
       <button class="btn btn--gold" type="submit">Send message</button>
       <p class="valuation__note" data-contact-note role="status">
-        Opens your email app with the message ready to send to hello@obelum.ae.
+        We reply within one working day.
       </p>
     </form>
   </div>
@@ -227,6 +228,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=26" defer></script>
+<script src="assets/js/main.js?v=27" defer></script>
 </body>
 </html>

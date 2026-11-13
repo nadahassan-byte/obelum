@@ -27,7 +27,7 @@
 <!-- Brand guidelines section 10: Gilda Display for headings, Montserrat for
      everything else. No italics, no script. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Montserrat:wght@300;400;500;600&display=swap">
-<link rel="stylesheet" href="assets/css/styles.css?v=26">
+<link rel="stylesheet" href="assets/css/styles.css?v=27">
 
 <script type="application/ld+json">
 {
@@ -392,6 +392,7 @@
     </div>
 
     <form class="valuation" id="contact" method="post" data-brief novalidate>
+      <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
       <!-- Radios, not a select: the options carry a line of explanation each, and
            a radio group gives arrow-key navigation and the right announcement
            for free. -->
@@ -538,15 +539,16 @@
 </section>
 
 <!-- =========================================================== Signup -->
-<!-- No list is connected yet: the form posts nowhere and main.js intercepts it
-     to point people at hello@obelum.ae. Give the <form> an action when the
-     mailing provider is chosen and delete the handler — see the README. -->
+<!-- No mailing-list provider yet: main.js emails each sign-up to the site
+     inbox through FormSubmit. Give the <form> an action when a provider is
+     chosen and that handler steps aside. -->
 <section class="signup is-dark on-dark" aria-labelledby="signup-h">
   <div class="shell signup__inner">
     <h2 class="signup__title" id="signup-h">
       The latest in Dubai property, <span class="italic">lifestyle &amp; culture</span>, curated just for you.
     </h2>
     <form class="signup__form" data-signup novalidate>
+      <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
       <label class="signup__label" for="signup-email">Enter your email</label>
       <div class="signup__control">
         <input class="signup__input" id="signup-email" name="email" type="email"
@@ -619,6 +621,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=26" defer></script>
+<script src="assets/js/main.js?v=27" defer></script>
 </body>
 </html>

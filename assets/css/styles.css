@@ -1774,3 +1774,7 @@ a, button, input, select, textarea, label {
    clicks on the centred logo. Let clicks through the bar, not its links. */
 .hero-nav.is-stuck { pointer-events: none; }
 .hero-nav.is-stuck .hero-nav__group { pointer-events: auto; }
+
+/* Honeypot: off-screen, so people never fill it and bots usually do. */
+.hp { position: absolute !important; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+button[disabled] { opacity: 0.6; cursor: progress; }

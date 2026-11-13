@@ -432,6 +432,56 @@
     };
   };
 
+  /* --- Sending forms by email ---------------------------------------------- */
+  // Every form on the site posts to FormSubmit, which emails each submission
+  // to the inbox below. No account: the very first submission makes FormSubmit
+  // send that inbox an "Activate form" link, and nothing is delivered until it
+  // is clicked. To change the inbox, change INBOX (and activate again).
+  const INBOX = 'oobelumgroup@gmail.com';
+  const ENDPOINT = 'https://formsubmit.co/ajax/' + INBOX;
+  const fallback = (subject) =>
+    `<a href="mailto:${INBOX}?subject=${encodeURIComponent(subject)}">${INBOX}</a>`;
+
+  // Resolves with FormSubmit's reply, or rejects with a message to show.
+  const sendForm = async (fields, subject, form) => {
+    const hp = form && $('input[name="_honey"]', form);
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(Object.assign({}, fields, {
+        _subject: subject,
+        _template: 'table',
+        _captcha: 'false',
+        _honey: hp ? hp.value : '',          // filled only by bots: FormSubmit drops it
+      })),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || String(data.success) !== 'true') throw new Error(data.message || 'Send failed');
+    return data;
+  };
+
+  // Runs a send with the button disabled and the outcome in the note.
+  const submitWith = async (form, button, note, fields, subject, thanks) => {
+    const label = button ? button.textContent : '';
+    if (button) { button.disabled = true; button.textContent = 'Sending\u2026'; }
+    try {
+      await sendForm(fields, subject, form);
+      form.reset();
+      // Put the country-code labels back in step with the reset selects.
+      $$('[data-country-code]', form).forEach((sel) => sel.dispatchEvent(new Event('change')));
+      if (note) note.textContent = thanks;
+      return true;
+    } catch (err) {
+      if (note) {
+        note.innerHTML = 'Sorry, that did not send. Please try again, or email ' +
+          fallback(subject) + ' directly.';
+      }
+      return false;
+    } finally {
+      if (button) { button.disabled = false; button.textContent = label; }
+    }
+  };
+
   /* --- Brief form: the panel follows the chosen intent ------------------- */
   const brief = $('[data-brief]');
   if (brief) {
@@ -551,18 +601,30 @@
       }
       if (brief.getAttribute('action')) return;
       e.preventDefault();
-      if (note) {
-        note.innerHTML = 'Thanks \u2014 nothing is connected behind this form yet. ' +
-          'Email <a href="mailto:hello@obelum.ae?subject=Brief">hello@obelum.ae</a> ' +
-          'and an advisor will pick it up.';
-      }
+      const v = (n) => (brief.elements[n] ? brief.elements[n].value.trim().replace(/\s+/g, ' ') : '');
+      const picked = $('.intent__input:checked', brief);
+      const intent = $('.intent__title', picked.parentElement).textContent.trim();
+      const submitBtn = $('[data-brief-submit]', brief);
+      submitWith(brief, submitBtn, note, {
+        'Looking to': intent,
+        name: v('name'),
+        email: v('email'),
+        phone: readPhone(brief.elements.phone).e164,
+        community: v('community'),
+      }, `Website brief: ${intent} \u2014 ${v('name')}`,
+      'Thank you \u2014 your brief has been sent. An advisor will come back to you within 24 hours.')
+        .then((ok) => {
+          if (!ok) return;
+          // The reset cleared the radios; put the panel back to its opening state.
+          show('default');
+          if (valueEl) valueEl.textContent = placeholder;
+          if (note) note.textContent = 'Thank you \u2014 your brief has been sent. An advisor will come back to you within 24 hours.';
+        });
     });
   }
 
   /* --- Contact form ------------------------------------------------------- */
-  // No backend yet: on submit, check the fields and open the visitor's email
-  // app with the message filled in. Give the <form> an action to post it to a
-  // real endpoint instead, and this steps aside.
+  // Emailed to INBOX through FormSubmit (see "Sending forms by email").
   const contact = $('[data-contact]');
   if (contact) {
     const note = $('[data-contact-note]', contact);
@@ -580,21 +642,21 @@
       const v = (n) => (contact.elements[n] ? contact.elements[n].value.trim().replace(/\s+/g, ' ') : '');
       const phone = readPhone(contact.elements.phone).e164;
       const subject = v('topic') + ' enquiry from ' + v('name');
-      const lines = [contact.elements.message.value.trim(), '', 'Name: ' + v('name'), 'Email: ' + v('email')];
-      if (phone) lines.push('Phone: ' + phone);
-      location.href = 'mailto:hello@obelum.ae?subject=' + encodeURIComponent(subject) +
-                      '&body=' + encodeURIComponent(lines.join('\n'));
-      if (note) {
-        note.innerHTML = 'Your email app should open with the message ready to send. If it ' +
-          'does not, email <a href="mailto:hello@obelum.ae">hello@obelum.ae</a> directly.';
-      }
+      submitWith(contact, $('button[type="submit"]', contact), note, {
+        name: v('name'),
+        email: v('email'),
+        phone: phone || 'Not given',
+        about: v('topic'),
+        message: contact.elements.message.value.trim(),
+      }, 'Website enquiry: ' + subject,
+      'Thank you \u2014 your message has been sent. We will reply within one working day.');
     });
   }
 
   /* --- Signup ------------------------------------------------------------- */
-  // There is no mailing list behind this yet. Rather than drop the address on
-  // the floor or claim a subscription that did not happen, send people to an
-  // inbox that exists. Remove this block once the form has a real action.
+  // No mailing-list provider yet: each sign-up is emailed to INBOX instead, so
+  // the address is kept rather than dropped. Give the form an action once a
+  // provider is chosen and this steps aside.
   const signup = $('[data-signup]');
   if (signup) {
     const note = $('[data-signup-note]', signup);
@@ -602,16 +664,15 @@
       if (signup.getAttribute('action')) return;   // a provider is wired in
       e.preventDefault();
       const email = $('#signup-email', signup);
-      if (!email.value.trim() || !email.checkValidity()) {
-        if (note) note.textContent = 'Please enter a valid email address.';
+      const problem = RULES.email(email.value.trim());
+      if (problem) {
+        if (note) note.textContent = problem;
         email.focus();
         return;
       }
-      if (note) {
-        note.innerHTML = 'Our list is not open yet \u2014 email ' +
-          '<a href="mailto:hello@obelum.ae?subject=Newsletter">hello@obelum.ae</a> ' +
-          'and we will add you.';
-      }
+      submitWith(signup, $('button[type="submit"]', signup), note,
+        { email: email.value.trim() }, 'Website newsletter sign-up',
+        'Thank you \u2014 you are on the list.');
     });
   }
 
