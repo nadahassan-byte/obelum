@@ -27,7 +27,7 @@
 <!-- Brand guidelines section 10: Gilda Display for headings, Montserrat for
      everything else. No italics, no script. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Montserrat:wght@300;400;500;600&display=swap">
-<link rel="stylesheet" href="assets/css/styles.css?v=25">
+<link rel="stylesheet" href="assets/css/styles.css?v=26">
 
 <script type="application/ld+json">
 {
@@ -48,7 +48,7 @@
 
 <!-- ============================================================= Header -->
 <header class="site-header" data-header>
-  <a class="wordmark" href="#">
+  <a class="wordmark" href="/">
     <img class="wordmark__img" src="assets/img/obelum-logo.png"
          alt="Obelum Properties" width="1748" height="498" fetchpriority="high">
   </a>
@@ -391,7 +391,7 @@
       </div>
     </div>
 
-    <form class="valuation" id="contact" method="post" data-brief>
+    <form class="valuation" id="contact" method="post" data-brief novalidate>
       <!-- Radios, not a select: the options carry a line of explanation each, and
            a radio group gives arrow-key navigation and the right announcement
            for free. -->
@@ -459,20 +459,31 @@
       <div class="valuation__row">
         <div class="field">
           <label for="v-name">Name</label>
-          <input id="v-name" name="name" type="text" placeholder="Your name" required>
+          <input id="v-name" name="name" type="text" autocomplete="name" placeholder="Your name" maxlength="60" data-rule="name" required>
         </div>
-        <div class="field">
+        <div class="field field--phone">
           <label for="v-phone">Phone</label>
-          <input id="v-phone" name="phone" type="tel" placeholder="+971" required>
+          <div class="phone">
+            <!-- The code shows as a short label; the select sits invisibly over
+                 it so the full country list opens natively. main.js fills it. -->
+            <div class="phone__cc">
+              <span class="phone__cc-label" aria-hidden="true" data-cc-label>+971</span>
+              <select class="phone__code" name="phone_code" aria-label="Country code" data-country-code>
+                <option value="AE" selected>United Arab Emirates (+971)</option>
+              </select>
+            </div>
+            <input id="v-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national"
+                   placeholder="50 123 4567" maxlength="20" data-rule="phone" required>
+          </div>
         </div>
       </div>
       <div class="field">
         <label for="v-email">Email</label>
-        <input id="v-email" name="email" type="email" placeholder="you@example.com" required>
+        <input id="v-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" maxlength="254" data-rule="email" required>
       </div>
       <div class="field">
         <label for="v-community">Community</label>
-        <input id="v-community" name="community" type="text" placeholder="e.g. JVC" required>
+        <input id="v-community" name="community" type="text" placeholder="e.g. JVC" maxlength="60" data-rule="community" required>
       </div>
 
       <button class="btn btn--gold" type="submit" data-brief-submit>Submit my brief</button>
@@ -555,7 +566,7 @@
 <footer class="site-footer">
   <div class="shell site-footer__top">
     <div class="site-footer__brand">
-      <a class="wordmark wordmark--footer" href="#">
+      <a class="wordmark wordmark--footer" href="/">
         <img class="wordmark__img" src="assets/img/obelum-logo.png"
              alt="Obelum Properties" width="1748" height="498" loading="lazy">
       </a>
@@ -608,6 +619,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=25" defer></script>
+<script src="assets/js/main.js?v=26" defer></script>
 </body>
 </html>

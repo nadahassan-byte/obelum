@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Montserrat:wght@300;400;500;600&display=swap">
-<link rel="stylesheet" href="assets/css/styles.css?v=25">
+<link rel="stylesheet" href="assets/css/styles.css?v=26">
 </head>
 
 <body class="page-contact">
@@ -123,16 +123,27 @@
       <div class="valuation__row">
         <div class="field">
           <label for="c-name">Name</label>
-          <input id="c-name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
+          <input id="c-name" name="name" type="text" autocomplete="name" placeholder="Your name" maxlength="60" data-rule="name" required>
         </div>
-        <div class="field">
+        <div class="field field--phone">
           <label for="c-phone">Phone</label>
-          <input id="c-phone" name="phone" type="tel" autocomplete="tel" placeholder="+971">
+          <div class="phone">
+            <!-- The code shows as a short label; the select sits invisibly over
+                 it so the full country list opens natively. main.js fills it. -->
+            <div class="phone__cc">
+              <span class="phone__cc-label" aria-hidden="true" data-cc-label>+971</span>
+              <select class="phone__code" name="phone_code" aria-label="Country code" data-country-code>
+                <option value="AE" selected>United Arab Emirates (+971)</option>
+              </select>
+            </div>
+            <input id="c-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national"
+                   placeholder="50 123 4567" maxlength="20" data-rule="phone">
+          </div>
         </div>
       </div>
       <div class="field">
         <label for="c-email">Email</label>
-        <input id="c-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        <input id="c-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" maxlength="254" data-rule="email" required>
       </div>
       <div class="field">
         <label for="c-topic">About</label>
@@ -146,7 +157,7 @@
       </div>
       <div class="field">
         <label for="c-message">Message</label>
-        <textarea id="c-message" name="message" rows="5" placeholder="How can we help?" required></textarea>
+        <textarea id="c-message" name="message" rows="5" placeholder="How can we help?" maxlength="2000" data-rule="message" required></textarea>
       </div>
 
       <button class="btn btn--gold" type="submit">Send message</button>
@@ -216,6 +227,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=25" defer></script>
+<script src="assets/js/main.js?v=26" defer></script>
 </body>
 </html>
