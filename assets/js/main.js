@@ -482,6 +482,35 @@
     }
   };
 
+  // The thank-you pop-up after a contact or brief is sent. A native <dialog>:
+  // it traps focus, closes on Escape, and returns focus to where it was.
+  // Built once, on first use; clicking the dimmed backdrop also closes it.
+  let thanksDialog = null;
+  const showThanks = () => {
+    if (!thanksDialog) {
+      thanksDialog = document.createElement('dialog');
+      thanksDialog.className = 'thanks';
+      thanksDialog.setAttribute('aria-labelledby', 'thanks-title');
+      thanksDialog.innerHTML =
+        '<div class="thanks__panel">' +
+          '<svg class="thanks__mark" width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">' +
+            '<circle cx="22" cy="22" r="21" stroke="currentColor" stroke-width="1.2"/>' +
+            '<path d="M13.5 22.5l6 6 11-12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '</svg>' +
+          '<h2 class="thanks__title" id="thanks-title">Thank you for contacting us</h2>' +
+          '<p class="thanks__text">Someone from the team will reach out to you shortly.</p>' +
+          '<button class="btn btn--gold thanks__close" type="button">Close</button>' +
+        '</div>';
+      document.body.appendChild(thanksDialog);
+      $('.thanks__close', thanksDialog).addEventListener('click', () => thanksDialog.close());
+      thanksDialog.addEventListener('click', (e) => { if (e.target === thanksDialog) thanksDialog.close(); });
+    }
+    if (typeof thanksDialog.showModal === 'function') {
+      if (!thanksDialog.open) thanksDialog.showModal();
+      $('.thanks__close', thanksDialog).focus();
+    }
+  };
+
   /* --- Brief form: the panel follows the chosen intent ------------------- */
   const brief = $('[data-brief]');
   if (brief) {
@@ -619,6 +648,7 @@
           show('default');
           if (valueEl) valueEl.textContent = placeholder;
           if (note) note.textContent = 'Thank you \u2014 your brief has been sent. An advisor will come back to you within 24 hours.';
+          showThanks();
         });
     });
   }
@@ -649,7 +679,8 @@
         about: v('topic'),
         message: contact.elements.message.value.trim(),
       }, 'Website enquiry: ' + subject,
-      'Thank you \u2014 your message has been sent. We will reply within one working day.');
+      'Thank you \u2014 your message has been sent. We will reply within one working day.')
+        .then((ok) => { if (ok) showThanks(); });
     });
   }
 
