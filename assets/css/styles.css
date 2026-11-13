@@ -1688,3 +1688,45 @@ a, button, input, select, textarea, label {
   }
   .quotes__dots { gap: 1.25rem; }
 }
+
+/* ==========================================================================
+   Contact page — the homepage brief layout, with the bar pinned from the top
+   ========================================================================== */
+.contact { min-height: 100svh; }
+/* Clear the 4rem pinned bar at every width (the stacked rule above already
+   does this below 64rem). */
+@media (min-width: 64rem) {
+  .contact { padding-top: 4rem; }
+  .contact .cta__copy { padding-top: clamp(3rem, 6vw, 5rem); }
+}
+.contact__details {
+  list-style: none; padding: 0;
+  margin-top: clamp(2rem, 3.5vw, 3rem);
+  display: grid; gap: 1.1rem;
+  max-width: 30rem;
+}
+.contact__details li {
+  display: grid; gap: 0.3rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid rgba(247, 245, 241, 0.16);
+  color: var(--chalk-white);
+}
+.contact__label {
+  font: 400 0.625rem/1 var(--mono);
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(247, 245, 241, 0.6);
+}
+.contact__details a { color: var(--chalk-white); transition: color 280ms var(--ease); }
+.contact__details a:hover { color: var(--gold); }
+.contact__form .btn { margin-top: 0.25rem; }
+.field textarea {
+  border: 0; background: none; padding: 0; min-width: 0; width: 100%;
+  font: inherit; font-size: 0.975rem; color: var(--ink);
+  resize: vertical; min-height: 7rem;
+}
+.valuation .field textarea { color: var(--chalk-white); }
+.valuation .field textarea::placeholder { color: rgba(247, 245, 241, 0.45); }
+.valuation__note a { color: var(--gold); text-decoration: underline; }
+/* Mark the current page in the pinned nav. */
+.hero-nav__link[aria-current="page"] { color: var(--gold); }
+.hero-nav__link[aria-current="page"]::after { transform: scaleX(1); }

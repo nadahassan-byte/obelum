@@ -10,7 +10,12 @@
   /* --- Sticky header + hero nav ------------------------------------------ */
   const header = $('[data-header]');
   const heroNav = $('.hero-nav');
-  if (header) {
+  // A page without a hero (contact) marks its header data-pinned: the bar
+  // and nav stay condensed from the start and never wait for a scroll.
+  if (header && header.hasAttribute('data-pinned')) {
+    header.classList.add('is-stuck');
+    if (heroNav) heroNav.classList.add('is-stuck');
+  } else if (header) {
     let docked = 0;
     // Hand the nav over to the pinned bar exactly as it would slide underneath
     // it, so the menu appears to stick rather than jump. Measured, not a guess
@@ -375,6 +380,38 @@
         note.innerHTML = 'Thanks \u2014 nothing is connected behind this form yet. ' +
           'Email <a href="mailto:hello@obelum.ae?subject=Brief">hello@obelum.ae</a> ' +
           'and an advisor will pick it up.';
+      }
+    });
+  }
+
+  /* --- Contact form ------------------------------------------------------- */
+  // No backend yet: on submit, check the fields and open the visitor's email
+  // app with the message filled in. Give the <form> an action to post it to a
+  // real endpoint instead, and this steps aside.
+  const contact = $('[data-contact]');
+  if (contact) {
+    const note = $('[data-contact-note]', contact);
+    contact.addEventListener('submit', (e) => {
+      if (contact.getAttribute('action')) return;
+      e.preventDefault();
+      const bad = $$('input, textarea', contact)
+        .find((f) => !f.checkValidity() || (f.required && !f.value.trim()));
+      if (bad) {
+        const label = $('label[for="' + bad.id + '"]', contact);
+        if (note) note.textContent = 'Please fill in ' +
+          (label ? label.textContent.toLowerCase() : 'this field') + '.';
+        bad.focus();
+        return;
+      }
+      const v = (n) => (contact.elements[n] ? contact.elements[n].value.trim() : '');
+      const subject = v('topic') + ' enquiry from ' + v('name');
+      const lines = [v('message'), '', 'Name: ' + v('name'), 'Email: ' + v('email')];
+      if (v('phone')) lines.push('Phone: ' + v('phone'));
+      location.href = 'mailto:hello@obelum.ae?subject=' + encodeURIComponent(subject) +
+                      '&body=' + encodeURIComponent(lines.join('\n'));
+      if (note) {
+        note.innerHTML = 'Your email app should open with the message ready to send. If it ' +
+          'does not, email <a href="mailto:hello@obelum.ae">hello@obelum.ae</a> directly.';
       }
     });
   }
